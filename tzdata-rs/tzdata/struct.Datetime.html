@@ -46,7 +46,7 @@
             <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                 [<span class='inner'>&#x2212;</span>]
             </a>
-        </span><a id='src-186' class='srclink' href='../src/tzdata/lib.rs.html#174-185' title='goto source code'>[src]</a></span></h1>
+        </span><a id='src-185' class='srclink' href='../src/tzdata/lib.rs.html#179-190' title='goto source code'>[src]</a></span></h1>
 <pre class='rust struct'>pub struct Datetime&lt;'a&gt; {
     // some fields omitted
 }</pre><div class='docblock'><p>A precise point in time along associated to a <code>Timezone</code>.</p>
@@ -74,6 +74,38 @@ year, month and day in this order.</p>
 <div class='docblock'><p>Return the time component of the <code>Datetime</code> expressed
 in the associated <code>Timezone</code>. The tuple holds
 the hour, minute, second and nanosecond in this order.</p>
+</div><h4 id='method.format' class='method'><code>fn <a href='#method.format' class='fnname'>format</a>(&amp;self, fmt: &amp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>) -&gt; <a class='struct' href='https://doc.rust-lang.org/nightly/collections/string/struct.String.html' title='collections::string::String'>String</a></code></h4>
+<div class='docblock'><p>Format the <code>Datetime</code> according to the provided <code>format</code>.
+The following control characters are implemented:</p>
+
+<ul>
+<li><code>%%</code>: the &#39;%&#39; character</li>
+<li><code>%Y</code>: year (2006)</li>
+<li><code>%m</code>: month (01)</li>
+<li><code>%d</code>: day of the month (02)</li>
+<li><code>%e</code>: day of the month (2)</li>
+<li><code>%H</code>: hour (15)</li>
+<li><code>%M</code>: minute (04)</li>
+<li><code>%S</code>: second (05)</li>
+<li><code>%3</code>: millisecond (123)</li>
+<li><code>%6</code>: microsecond (123456)</li>
+<li><code>%9</code>: nanosecond (123456789)</li>
+<li><code>%x</code>: UTC offset (+02:00 or -05:00)</li>
+<li><code>%z</code>: UTC offset (+0200 or -0500)</li>
+<li><code>%Z</code>: timezone abbreviation (CET)</li>
+<li><code>%w</code>: weekday (1)</li>
+<li><code>%a</code>: abbreviated weekday name (Mon)</li>
+<li><code>%A</code>: full weekday name (Monday)</li>
+<li><code>%b</code>: abbreviated month name (Jan)</li>
+<li><code>%B</code>: full month name (January)</li>
+<li><code>%C</code>: century (20)</li>
+</ul>
+
+<p>Panics if the format is invalid.</p>
+</div><h4 id='method.rfc3339' class='method'><code>fn <a href='#method.rfc3339' class='fnname'>rfc3339</a>(&amp;self) -&gt; <a class='struct' href='https://doc.rust-lang.org/nightly/collections/string/struct.String.html' title='collections::string::String'>String</a></code></h4>
+<div class='docblock'><p>Format <code>Datetime</code> according to RFC 3339 format.</p>
+</div><h4 id='method.rfc2822' class='method'><code>fn <a href='#method.rfc2822' class='fnname'>rfc2822</a>(&amp;self) -&gt; <a class='struct' href='https://doc.rust-lang.org/nightly/collections/string/struct.String.html' title='collections::string::String'>String</a></code></h4>
+<div class='docblock'><p>Format <code>Datetime</code> according to RFC 2822 format.</p>
 </div></div><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><code>impl&lt;'a&gt; <a class='trait' href='https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html' title='core::cmp::PartialEq'>PartialEq</a>&lt;<a class='struct' href='../tzdata/struct.Datetime.html' title='tzdata::Datetime'>Datetime</a>&lt;'a&gt;&gt; for <a class='struct' href='../tzdata/struct.Datetime.html' title='tzdata::Datetime'>Datetime</a>&lt;'a&gt;</code></h3><div class='impl-items'><h4 id='method.eq' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html#method.eq' class='fnname'>eq</a>(&amp;self, other: &amp;<a class='struct' href='../tzdata/struct.Datetime.html' title='tzdata::Datetime'>Datetime</a>) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
 <h4 id='method.ne' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html#method.ne' class='fnname'>ne</a>(&amp;self, other: &amp;Rhs) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
 </div><h3 class='impl'><code>impl&lt;'a&gt; <a class='trait' href='https://doc.rust-lang.org/nightly/core/cmp/trait.Eq.html' title='core::cmp::Eq'>Eq</a> for <a class='struct' href='../tzdata/struct.Datetime.html' title='tzdata::Datetime'>Datetime</a>&lt;'a&gt;</code></h3><div class='impl-items'></div><h3 class='impl'><code>impl&lt;'a&gt; <a class='trait' href='https://doc.rust-lang.org/nightly/core/cmp/trait.PartialOrd.html' title='core::cmp::PartialOrd'>PartialOrd</a>&lt;<a class='struct' href='../tzdata/struct.Datetime.html' title='tzdata::Datetime'>Datetime</a>&lt;'a&gt;&gt; for <a class='struct' href='../tzdata/struct.Datetime.html' title='tzdata::Datetime'>Datetime</a>&lt;'a&gt;</code></h3><div class='impl-items'><h4 id='method.partial_cmp' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/cmp/trait.PartialOrd.html#method.partial_cmp' class='fnname'>partial_cmp</a>(&amp;self, other: &amp;<a class='struct' href='../tzdata/struct.Datetime.html' title='tzdata::Datetime'>Datetime</a>) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='enum' href='https://doc.rust-lang.org/nightly/core/cmp/enum.Ordering.html' title='core::cmp::Ordering'>Ordering</a>&gt;</code></h4>
