@@ -78,6 +78,10 @@ disregarding the <code>TZ</code> environment variable.</p>
 The provided offset is in seconds.</p>
 </div><h4 id='method.now' class='method'><code>fn <a href='#method.now' class='fnname'>now</a>(&amp;self) -&gt; <a class='struct' href='../tzdata/struct.Datetime.html' title='tzdata::Datetime'>Datetime</a></code></h4>
 <div class='docblock'><p>Return the <code>Datetime</code> representing now, relative to this <code>Timezone</code>.</p>
+</div><h4 id='method.parse' class='method'><code>fn <a href='#method.parse' class='fnname'>parse</a>(&amp;self, s: &amp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>, fmt: &amp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>) -&gt; <a class='struct' href='../tzdata/struct.Datetime.html' title='tzdata::Datetime'>Datetime</a></code></h4>
+<div class='docblock'><p>Parse a <code>Datetime</code> relative to this <code>Timezone</code> according
+to the given format. Timezone-related field are ignored.
+Panics if the string does not match the format.</p>
 </div><h4 id='method.datetime' class='method'><code>fn <a href='#method.datetime' class='fnname'>datetime</a>(&amp;self, year: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a>, month: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a>, day: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a>, hour: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a>, minute: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a>, second: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a>, nano: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a>) -&gt; <a class='struct' href='../tzdata/struct.Datetime.html' title='tzdata::Datetime'>Datetime</a></code></h4>
 <div class='docblock'><p>Create a new <code>Datetime</code> relative to this <code>Timezone</code>.
 Panics if the following constraints do not hold:</p>
