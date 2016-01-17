@@ -1,1 +1,1 @@
-initSidebarItems({"struct":[["Datetime","A precise point in time along associated to a `Timezone`."],["Timezone","A named timezone from the `IANA Time Zone Database`"]]});
+initSidebarItems({"struct":[["Datetime","A precise point in time along associated to a `Timezone`."],["Deltatime","A delta of time used in `Datetime` arithmetic."],["Timezone","A named timezone from the `IANA Time Zone Database`"]]});
