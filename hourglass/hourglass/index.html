@@ -46,7 +46,7 @@
             <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                 [<span class='inner'>&#x2212;</span>]
             </a>
-        </span><a id='src-0' class='srclink' href='../src/hourglass/lib.rs.html#1-1404' title='goto source code'>[src]</a></span></h1>
+        </span><a id='src-0' class='srclink' href='../src/hourglass/lib.rs.html#1-1632' title='goto source code'>[src]</a></span></h1>
 <div class='docblock'><p><code>hourglass</code> provides support for timezone, datetime arithmetic and take care
 of subtleties related to time handling, like leap seconds.</p>
 
@@ -103,6 +103,19 @@ are available when handling <code>Deltatime</code> and will yield different resu
 <span class='comment'>// One leap second was inserted this day.</span>
 <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>t_plus_86400_sec</span>.<span class='ident'>date</span>(), (<span class='number'>2015</span>, <span class='number'>6</span>, <span class='number'>30</span>));
 <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>t_plus_86400_sec</span>.<span class='ident'>time</span>(), (<span class='number'>23</span>, <span class='number'>59</span>, <span class='number'>60</span>, <span class='number'>0</span>));</pre>
+
+<p>Two <code>Datetime</code> can also be compared:</p>
+<pre class='rust rust-example-rendered'>
+<span class='kw'>use</span> <span class='ident'>hourglass</span>::{<span class='ident'>Timezone</span>, <span class='ident'>Deltatime</span>};
+
+<span class='kw'>let</span> <span class='ident'>utc</span> <span class='op'>=</span> <span class='ident'>Timezone</span>::<span class='ident'>utc</span>();
+<span class='kw'>let</span> <span class='ident'>t0</span> <span class='op'>=</span> <span class='ident'>utc</span>.<span class='ident'>datetime</span>(<span class='number'>2015</span>, <span class='number'>6</span>, <span class='number'>30</span>, <span class='number'>0</span>, <span class='number'>0</span>, <span class='number'>0</span>, <span class='number'>0</span>);
+<span class='kw'>let</span> <span class='ident'>t1</span> <span class='op'>=</span> <span class='ident'>utc</span>.<span class='ident'>datetime</span>(<span class='number'>2015</span>, <span class='number'>7</span>, <span class='number'>1</span>, <span class='number'>0</span>, <span class='number'>0</span>, <span class='number'>0</span>, <span class='number'>0</span>);
+
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>t0</span> <span class='op'>&lt;</span> <span class='ident'>t1</span>, <span class='boolval'>true</span>);
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>t0</span> <span class='op'>&gt;=</span> <span class='ident'>t1</span>, <span class='boolval'>false</span>);
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>t1</span> <span class='op'>==</span> <span class='ident'>t1</span>, <span class='boolval'>true</span>);
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>t1</span> <span class='op'>-</span> <span class='ident'>t0</span>, <span class='ident'>Deltatime</span>::<span class='ident'>seconds</span>(<span class='number'>86401</span>));</pre>
 </div><h2 id='structs' class='section-header'><a href="#structs">Structs</a></h2>
 <table>
                     <tr class=' module-item'>
