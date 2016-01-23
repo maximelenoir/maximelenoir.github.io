@@ -46,7 +46,7 @@
             <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                 [<span class='inner'>&#x2212;</span>]
             </a>
-        </span><a id='src-621' class='srclink' href='../src/hourglass/lib.rs.html#979' title='goto source code'>[src]</a></span></h1>
+        </span><a id='src-665' class='srclink' href='../src/hourglass/lib.rs.html#1086' title='goto source code'>[src]</a></span></h1>
 <pre class='rust struct'>pub struct Deltatime(_);</pre><div class='docblock'><p>A delta of time used in <code>Datetime</code> arithmetic.</p>
 
 <p>This represents a duration in time and can be used to shift <code>Datetime</code>
@@ -58,7 +58,7 @@ because a <code>Deltatime</code> is dependant of the <code>Datetime</code> it ap
 
 <h1 id='example' class='section-header'><a href='#example'>Example</a></h1><pre class='rust rust-example-rendered'>
 <span class='kw'>let</span> <span class='ident'>utc</span> <span class='op'>=</span> <span class='ident'>hourglass</span>::<span class='ident'>Timezone</span>::<span class='ident'>utc</span>();
-<span class='kw'>let</span> <span class='ident'>t</span> <span class='op'>=</span> <span class='ident'>utc</span>.<span class='ident'>datetime</span>(<span class='number'>2015</span>, <span class='number'>6</span>, <span class='number'>30</span>, <span class='number'>0</span>, <span class='number'>0</span>, <span class='number'>0</span>, <span class='number'>0</span>);
+<span class='kw'>let</span> <span class='ident'>t</span> <span class='op'>=</span> <span class='ident'>utc</span>.<span class='ident'>datetime</span>(<span class='number'>2015</span>, <span class='number'>6</span>, <span class='number'>30</span>, <span class='number'>0</span>, <span class='number'>0</span>, <span class='number'>0</span>, <span class='number'>0</span>).<span class='ident'>unwrap</span>();
 
 <span class='kw'>let</span> <span class='ident'>add_86400_secs</span> <span class='op'>=</span> <span class='ident'>t</span> <span class='op'>+</span> <span class='ident'>hourglass</span>::<span class='ident'>Deltatime</span>::<span class='ident'>seconds</span>(<span class='number'>86400</span>);
 
