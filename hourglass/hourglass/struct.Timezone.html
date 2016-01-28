@@ -46,7 +46,7 @@
             <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                 [<span class='inner'>&#x2212;</span>]
             </a>
-        </span><a id='src-219' class='srclink' href='../src/hourglass/lib.rs.html#115-120' title='goto source code'>[src]</a></span></h1>
+        </span><a id='src-175' class='srclink' href='../src/hourglass/lib.rs.html#120-125' title='goto source code'>[src]</a></span></h1>
 <pre class='rust struct'>pub struct Timezone {
     // some fields omitted
 }</pre><div class='docblock'><p>A timezone.</p>
@@ -66,11 +66,11 @@ system local timezone with <code>Timezone::local</code>.</p>
     <span class='kw'>let</span> <span class='ident'>now</span> <span class='op'>=</span> <span class='ident'>now</span>.<span class='ident'>project</span>(<span class='kw-2'>&amp;</span><span class='ident'>tz</span>);
     <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;it is now {:?} in {}&quot;</span>, <span class='ident'>now</span>, <span class='ident'>tzname</span>);
 }</pre>
-</div><h2 id='methods'>Methods</h2><h3 class='impl'><code>impl <a class='struct' href='../hourglass/struct.Timezone.html' title='hourglass::Timezone'>Timezone</a></code></h3><div class='impl-items'><h4 id='method.new' class='method'><code>fn <a href='#method.new' class='fnname'>new</a>(timezone: &amp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>) -&gt; <a class='type' href='https://doc.rust-lang.org/nightly/std/io/error/type.Result.html' title='std::io::error::Result'>Result</a>&lt;Self&gt;</code></h4>
+</div><h2 id='methods'>Methods</h2><h3 class='impl'><code>impl <a class='struct' href='../hourglass/struct.Timezone.html' title='hourglass::Timezone'>Timezone</a></code></h3><div class='impl-items'><h4 id='method.new' class='method'><code>fn <a href='#method.new' class='fnname'>new</a>(timezone: &amp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/result/enum.Result.html' title='core::result::Result'>Result</a>&lt;Self, <a class='enum' href='../hourglass/enum.TzError.html' title='hourglass::TzError'>TzError</a>&gt;</code></h4>
 <div class='docblock'><p>Try to load a new <code>Timezone</code>.
 It assumes that the zoneinfo data are located
 under <code>/usr/share/zoneinfo</code>.</p>
-</div><h4 id='method.local' class='method'><code>fn <a href='#method.local' class='fnname'>local</a>() -&gt; <a class='type' href='https://doc.rust-lang.org/nightly/std/io/error/type.Result.html' title='std::io::error::Result'>Result</a>&lt;Self&gt;</code></h4>
+</div><h4 id='method.local' class='method'><code>fn <a href='#method.local' class='fnname'>local</a>() -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/result/enum.Result.html' title='core::result::Result'>Result</a>&lt;Self, <a class='enum' href='../hourglass/enum.TzError.html' title='hourglass::TzError'>TzError</a>&gt;</code></h4>
 <div class='docblock'><p>Load the local <code>Timezone</code> set by the system,
 disregarding the <code>TZ</code> environment variable.</p>
 </div><h4 id='method.utc' class='method'><code>fn <a href='#method.utc' class='fnname'>utc</a>() -&gt; Self</code></h4>
@@ -78,6 +78,9 @@ disregarding the <code>TZ</code> environment variable.</p>
 </div><h4 id='method.fixed' class='method'><code>fn <a href='#method.fixed' class='fnname'>fixed</a>(sec: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a>) -&gt; Self</code></h4>
 <div class='docblock'><p>Returns a fixed offset to <code>UTC</code> timezone.
 The provided offset is in seconds.</p>
+</div><h4 id='method.posix' class='method'><code>fn <a href='#method.posix' class='fnname'>posix</a>(posix: &amp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/result/enum.Result.html' title='core::result::Result'>Result</a>&lt;Self, <a class='enum' href='../hourglass/enum.TzError.html' title='hourglass::TzError'>TzError</a>&gt;</code></h4>
+<div class='docblock'><p>Create a <code>Timezone</code> from a POSIX TZ definition.
+See <code>man 3 tzset</code> for a description of the format.</p>
 </div><h4 id='method.now' class='method'><code>fn <a href='#method.now' class='fnname'>now</a>(&amp;self) -&gt; <a class='struct' href='../hourglass/struct.Datetime.html' title='hourglass::Datetime'>Datetime</a></code></h4>
 <div class='docblock'><p>Return the <code>Datetime</code> representing now, relative to this <code>Timezone</code>.</p>
 </div><h4 id='method.parse' class='method'><code>fn <a href='#method.parse' class='fnname'>parse</a>(&amp;self, s: &amp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>, fmt: &amp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/result/enum.Result.html' title='core::result::Result'>Result</a>&lt;<a class='struct' href='../hourglass/struct.Datetime.html' title='hourglass::Datetime'>Datetime</a>, <a class='enum' href='../hourglass/enum.InputError.html' title='hourglass::InputError'>InputError</a>&gt;</code></h4>
