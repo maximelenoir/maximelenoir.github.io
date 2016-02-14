@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/maxime/.cargo/registry/src/github.com-88ac128001ac3a9a/nom-1.1.0/src/lib.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/maxime/.multirust/toolchains/nightly/cargo/registry/src/github.com-88ac128001ac3a9a/nom-1.2.0/src/lib.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>lib.rs.html -- source</title>
@@ -189,11 +189,13 @@
 <span id="146">146</span>
 <span id="147">147</span>
 <span id="148">148</span>
+<span id="149">149</span>
+<span id="150">150</span>
 </pre><pre class='rust '>
-<span class='doccomment'>//! Nom, eating data byte by byte</span>
+<span class='doccomment'>//! nom, eating data byte by byte</span>
 <span class='doccomment'>//!</span>
-<span class='doccomment'>//! The goal is to make a parser combinator library that is safe,</span>
-<span class='doccomment'>//! supports streaming (push and pull), and as much as possible zero copy.</span>
+<span class='doccomment'>//! nom is a parser combinator library with a focus on safe parsing,</span>
+<span class='doccomment'>//! streaming patterns, and as much as possible zero copy.</span>
 <span class='doccomment'>//!</span>
 <span class='doccomment'>//! The code is available on [Github](https://github.com/Geal/nom)</span>
 <span class='doccomment'>//!</span>
@@ -303,6 +305,7 @@
 <span class='kw'>pub</span> <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>util</span>::<span class='op'>*</span>;
 <span class='kw'>pub</span> <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>internal</span>::<span class='op'>*</span>;
 <span class='kw'>pub</span> <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>macros</span>::<span class='op'>*</span>;
+<span class='kw'>pub</span> <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>methods</span>::<span class='op'>*</span>;
 <span class='kw'>pub</span> <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>bytes</span>::<span class='op'>*</span>;
 <span class='kw'>pub</span> <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>bits</span>::<span class='op'>*</span>;
 
@@ -322,6 +325,7 @@
 <span class='attribute'>#[<span class='ident'>macro_use</span>]</span> <span class='kw'>mod</span> <span class='ident'>util</span>;
 <span class='kw'>mod</span> <span class='ident'>internal</span>;
 <span class='attribute'>#[<span class='ident'>macro_use</span>]</span> <span class='kw'>mod</span> <span class='ident'>macros</span>;
+<span class='attribute'>#[<span class='ident'>macro_use</span>]</span> <span class='kw'>mod</span> <span class='ident'>methods</span>;
 <span class='attribute'>#[<span class='ident'>macro_use</span>]</span> <span class='kw'>mod</span> <span class='ident'>bytes</span>;
 <span class='attribute'>#[<span class='ident'>macro_use</span>]</span> <span class='kw'>mod</span> <span class='ident'>bits</span>;
 

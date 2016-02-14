@@ -46,11 +46,11 @@
             <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                 [<span class='inner'>&#x2212;</span>]
             </a>
-        </span><a id='src-0' class='srclink' href='../src/nom/lib.rs.html#1-148' title='goto source code'>[src]</a></span></h1>
-<div class='docblock'><p>Nom, eating data byte by byte</p>
+        </span><a id='src-0' class='srclink' href='../src/nom/lib.rs.html#1-150' title='goto source code'>[src]</a></span></h1>
+<div class='docblock'><p>nom, eating data byte by byte</p>
 
-<p>The goal is to make a parser combinator library that is safe,
-supports streaming (push and pull), and as much as possible zero copy.</p>
+<p>nom is a parser combinator library with a focus on safe parsing,
+streaming patterns, and as much as possible zero copy.</p>
 
 <p>The code is available on <a href="https://github.com/Geal/nom">Github</a></p>
 
@@ -137,7 +137,6 @@ supports streaming (push and pull), and as much as possible zero copy.</p>
                                title='nom::add_error!'>add_error!</a></td>
                         <td class='docblock short'>
                              <p>Add an error if the child parser fails</p>
-
                         </td>
                     </tr>
                 
@@ -147,7 +146,18 @@ supports streaming (push and pull), and as much as possible zero copy.</p>
                         <td class='docblock short'>
                              <p><code>alt!(I -&gt; IResult&lt;I,O&gt; | I -&gt; IResult&lt;I,O&gt; | ... | I -&gt; IResult&lt;I,O&gt; ) =&gt; I -&gt; IResult&lt;I, O&gt;</code>
 try a list of parsers, return the result of the first successful one</p>
-
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='macro' href='macro.alt_complete!.html'
+                               title='nom::alt_complete!'>alt_complete!</a></td>
+                        <td class='docblock short'>
+                             <p>This is a combination of the <code>alt!</code> and <code>complete!</code> combinators. Rather
+than returning <code>Incomplete</code> on partial input, <code>alt_complete!</code> will try the
+next alternative in the chain. You should use this only if you know you
+will not receive partial input for the rules you&#39;re trying to match (this
+is almost always the case for parsing programming languages).</p>
                         </td>
                     </tr>
                 
@@ -156,7 +166,15 @@ try a list of parsers, return the result of the first successful one</p>
                                title='nom::apply!'>apply!</a></td>
                         <td class='docblock short'>
                              <p>emulate function currying: <code>apply!(my_function, arg1, arg2, ...)</code> becomes <code>my_function(input, arg1, arg2, ...)</code></p>
-
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='macro' href='macro.apply_rf!.html'
+                               title='nom::apply_rf!'>apply_rf!</a></td>
+                        <td class='docblock short'>
+                             <p>emulate function currying for method calls on structs
+<code>apply!(self.my_function, arg1, arg2, ...)</code> becomes <code>self.my_function(input, arg1, arg2, ...)</code></p>
                         </td>
                     </tr>
                 
@@ -166,7 +184,8 @@ try a list of parsers, return the result of the first successful one</p>
                         <td class='docblock short'>
                              <p><code>bits!( parser ) =&gt; ( &amp;[u8], (&amp;[u8], usize) -&gt; IResult&lt;(&amp;[u8], usize), T&gt; ) -&gt; IResult&lt;&amp;[u8], T&gt;</code>
 transforms its byte slice input in a bit stream for the underlying parsers</p>
-
+<pre class='rust rust-example-rendered'>
+ <span class='macro'>named</span><span class='macro'>!</span>( <span class='ident'>take_3_bits</span><span class='op'>&lt;</span><span class='ident'>u8</span><span class='op'>&gt;</span>, <span class='macro'>bits</span><span class='macro'>!</span>( <span class='macro'>take_bits</span><span class='macro'>!</span>( <span class='ident'>u8</span>, <span class='number'>3</span> ) ) );
                         </td>
                     </tr>
                 
@@ -175,7 +194,14 @@ transforms its byte slice input in a bit stream for the underlying parsers</p>
                                title='nom::call!'>call!</a></td>
                         <td class='docblock short'>
                              <p>Used to wrap common expressions and function as macros</p>
-
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='macro' href='macro.call_m!.html'
+                               title='nom::call_m!'>call_m!</a></td>
+                        <td class='docblock short'>
+                             <p>Used to called methods then move self back into self</p>
                         </td>
                     </tr>
                 
@@ -184,11 +210,7 @@ transforms its byte slice input in a bit stream for the underlying parsers</p>
                                title='nom::chain!'>chain!</a></td>
                         <td class='docblock short'>
                              <p><code>chain!(I-&gt;IResult&lt;I,A&gt; ~ I-&gt;IResult&lt;I,B&gt; ~ ... I-&gt;IResult&lt;I,X&gt; , || { return O } ) =&gt; I -&gt; IResult&lt;I, O&gt;</code>
-chains parsers and assemble the results through a closure
-the input type I must implement nom::InputLength
-this combinator will count how much data is consumed by every child parser and take it into account if
-there is not enough data</p>
-
+chains parsers and assemble the results through a closure</p>
                         </td>
                     </tr>
                 
@@ -197,7 +219,6 @@ there is not enough data</p>
                                title='nom::char!'>char!</a></td>
                         <td class='docblock short'>
                              <p>matches one character: `char!(char) =&gt; &amp;[u8] -&gt; IResult&lt;&amp;[u8], char&gt;</p>
-
                         </td>
                     </tr>
                 
@@ -206,7 +227,6 @@ there is not enough data</p>
                                title='nom::closure!'>closure!</a></td>
                         <td class='docblock short'>
                              <p>Wraps a parser in a closure</p>
-
                         </td>
                     </tr>
                 
@@ -216,7 +236,6 @@ there is not enough data</p>
                         <td class='docblock short'>
                              <p>replaces a <code>Incomplete</code> returned by the child parser
 with an <code>Error</code></p>
-
                         </td>
                     </tr>
                 
@@ -226,7 +245,6 @@ with an <code>Error</code></p>
                         <td class='docblock short'>
                              <p><code>cond!(bool, I -&gt; IResult&lt;I,O&gt;) =&gt; I -&gt; IResult&lt;I, Option&lt;O&gt;&gt;</code>
 Conditional combinator</p>
-
                         </td>
                     </tr>
                 
@@ -236,7 +254,6 @@ Conditional combinator</p>
                         <td class='docblock short'>
                              <p><code>cond_reduce!(bool, I -&gt; IResult&lt;I,O&gt;) =&gt; I -&gt; IResult&lt;I, O&gt;</code>
 Conditional combinator with error</p>
-
                         </td>
                     </tr>
                 
@@ -254,7 +271,8 @@ Conditional combinator with error</p>
                         <td class='docblock short'>
                              <p><code>count!(I -&gt; IResult&lt;I,O&gt;, nb) =&gt; I -&gt; IResult&lt;I, Vec&lt;O&gt;&gt;</code>
 Applies the child parser a specified number of times</p>
-
+<pre class='rust rust-example-rendered'>
+ <span class='macro'>named</span><span class='macro'>!</span>(<span class='ident'>counter</span><span class='op'>&lt;</span> <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span>[<span class='ident'>u8</span>]<span class='op'>&gt;</span> <span class='op'>&gt;</span>, <span class='macro'>count</span><span class='macro'>!</span>( <span class='macro'>tag</span><span class='macro'>!</span>( <span class='string'>&quot;abcd&quot;</span> ), <span class='number'>2</span> ) );
                         </td>
                     </tr>
                 
@@ -265,7 +283,10 @@ Applies the child parser a specified number of times</p>
                              <p><code>count_fixed!(O, I -&gt; IResult&lt;I,O&gt;, nb) =&gt; I -&gt; IResult&lt;I, [O; nb]&gt;</code>
 Applies the child parser a fixed number of times and returns a fixed size array
 The type must be specified and it must be <code>Copy</code></p>
-
+<pre class='rust rust-example-rendered'>
+ <span class='macro'>named</span><span class='macro'>!</span>(<span class='ident'>counter</span><span class='op'>&lt;</span> [<span class='kw-2'>&amp;</span>[<span class='ident'>u8</span>]; <span class='number'>2</span>] <span class='op'>&gt;</span>, <span class='macro'>count_fixed</span><span class='macro'>!</span>( <span class='kw-2'>&amp;</span>[<span class='ident'>u8</span>], <span class='macro'>tag</span><span class='macro'>!</span>( <span class='string'>&quot;abcd&quot;</span> ), <span class='number'>2</span> ) );
+ <span class='comment'>// can omit the type specifier if returning slices</span>
+ <span class='comment'>// named!(counter&lt; [&amp;[u8]; 2] &gt;, count_fixed!( tag!( &quot;abcd&quot; ), 2 ) );</span>
                         </td>
                     </tr>
                 
@@ -274,7 +295,6 @@ The type must be specified and it must be <code>Copy</code></p>
                                title='nom::dbg!'>dbg!</a></td>
                         <td class='docblock short'>
                              <p>Prints a message if the parser fails</p>
-
                         </td>
                     </tr>
                 
@@ -283,7 +303,6 @@ The type must be specified and it must be <code>Copy</code></p>
                                title='nom::dbg_dmp!'>dbg_dmp!</a></td>
                         <td class='docblock short'>
                              <p>Prints a message and the input if the parser fails</p>
-
                         </td>
                     </tr>
                 
@@ -293,7 +312,6 @@ The type must be specified and it must be <code>Copy</code></p>
                         <td class='docblock short'>
                              <p><code>delimited!(I -&gt; IResult&lt;I,T&gt;, I -&gt; IResult&lt;I,O&gt;, I -&gt; IResult&lt;I,U&gt;) =&gt; I -&gt; IResult&lt;I, O&gt;</code>
 delimited(opening, X, closing) returns X</p>
-
                         </td>
                     </tr>
                 
@@ -302,7 +320,6 @@ delimited(opening, X, closing) returns X</p>
                                title='nom::error!'>error!</a></td>
                         <td class='docblock short'>
                              <p>Prevents backtracking if the child parser fails</p>
-
                         </td>
                     </tr>
                 
@@ -312,7 +329,6 @@ delimited(opening, X, closing) returns X</p>
                         <td class='docblock short'>
                              <p><code>escaped!(&amp;[T] -&gt; IResult&lt;&amp;[T], &amp;[T]&gt;, T, &amp;[T] -&gt; IResult&lt;&amp;[T], &amp;[T]&gt;) =&gt; &amp;[T] -&gt; IResult&lt;&amp;[T], &amp;[T]&gt;</code>
 matches a byte string with escaped characters.</p>
-
                         </td>
                     </tr>
                 
@@ -322,7 +338,6 @@ matches a byte string with escaped characters.</p>
                         <td class='docblock short'>
                              <p><code>escaped_transform!(&amp;[T] -&gt; IResult&lt;&amp;[T], &amp;[T]&gt;, T, &amp;[T] -&gt; IResult&lt;&amp;[T], &amp;[T]&gt;) =&gt; &amp;[T] -&gt; IResult&lt;&amp;[T], Vec&lt;T&gt;&gt;</code>
 matches a byte string with escaped characters.</p>
-
                         </td>
                     </tr>
                 
@@ -332,7 +347,6 @@ matches a byte string with escaped characters.</p>
                         <td class='docblock short'>
                              <p><code>expr_opt!(Option&lt;O&gt;) =&gt; I -&gt; IResult&lt;I, O&gt;</code>
 evaluate an expression that returns a Option<T> and returns a IResult::Done(I,T) if Ok</p>
-
                         </td>
                     </tr>
                 
@@ -342,7 +356,6 @@ evaluate an expression that returns a Option<T> and returns a IResult::Done(I,T)
                         <td class='docblock short'>
                              <p><code>expr_res!(Result&lt;E,O&gt;) =&gt; I -&gt; IResult&lt;I, O&gt;</code>
 evaluate an expression that returns a Result<T,E> and returns a IResult::Done(I,T) if Ok</p>
-
                         </td>
                     </tr>
                 
@@ -351,7 +364,6 @@ evaluate an expression that returns a Result<T,E> and returns a IResult::Done(I,
                                title='nom::fix_error!'>fix_error!</a></td>
                         <td class='docblock short'>
                              <p>translate parser result from IResult<I,O,u32> to IResult<I,O,E> woth a custom type</p>
-
                         </td>
                     </tr>
                 
@@ -360,7 +372,6 @@ evaluate an expression that returns a Result<T,E> and returns a IResult::Done(I,
                                title='nom::flat_map!'>flat_map!</a></td>
                         <td class='docblock short'>
                              <p><code>flat_map!(R -&gt; IResult&lt;R,S&gt;, S -&gt; IResult&lt;S,T&gt;) =&gt; R -&gt; IResult&lt;R, T&gt;</code></p>
-
                         </td>
                     </tr>
                 
@@ -370,7 +381,6 @@ evaluate an expression that returns a Result<T,E> and returns a IResult::Done(I,
                         <td class='docblock short'>
                              <p>if parameter is true, parse a big endian i16 integer,
 otherwise a little endian i16 integer</p>
-
                         </td>
                     </tr>
                 
@@ -380,7 +390,6 @@ otherwise a little endian i16 integer</p>
                         <td class='docblock short'>
                              <p>if parameter is true, parse a big endian i32 integer,
 otherwise a little endian i32 integer</p>
-
                         </td>
                     </tr>
                 
@@ -390,7 +399,6 @@ otherwise a little endian i32 integer</p>
                         <td class='docblock short'>
                              <p>if parameter is true, parse a big endian i64 integer,
 otherwise a little endian i64 integer</p>
-
                         </td>
                     </tr>
                 
@@ -400,15 +408,8 @@ otherwise a little endian i64 integer</p>
                         <td class='docblock short'>
                              <p><code>is_a!(&amp;[T]) =&gt; &amp;[T] -&gt; IResult&lt;&amp;[T], &amp;[T]&gt;</code>
 returns the longest list of bytes that appear in the provided array</p>
-
-                        </td>
-                    </tr>
-                
-                    <tr class=' module-item'>
-                        <td><a class='macro' href='macro.is_a_bytes!.html'
-                               title='nom::is_a_bytes!'>is_a_bytes!</a></td>
-                        <td class='docblock short'>
-                             
+<pre class='rust rust-example-rendered'>
+ <span class='macro'>named</span><span class='macro'>!</span>(<span class='ident'>abcd</span>, <span class='macro'>is_a</span><span class='macro'>!</span>( <span class='string'>&quot;abcd&quot;</span> ));
                         </td>
                     </tr>
                 
@@ -418,7 +419,8 @@ returns the longest list of bytes that appear in the provided array</p>
                         <td class='docblock short'>
                              <p><code>is_a_s!(&amp;str) =&gt; &amp;str -&gt; IResult&lt;&amp;str, &amp;str&gt;</code>
 returns the longest list of characters that appear in the provided array</p>
-
+<pre class='rust rust-example-rendered'>
+ <span class='macro'>named</span><span class='macro'>!</span>(<span class='ident'>abcd</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='ident'>str</span>, <span class='kw-2'>&amp;</span><span class='ident'>str</span><span class='op'>&gt;</span>, <span class='macro'>is_a_s</span><span class='macro'>!</span>( <span class='string'>&quot;abcd&quot;</span> ));
                         </td>
                     </tr>
                 
@@ -428,15 +430,8 @@ returns the longest list of characters that appear in the provided array</p>
                         <td class='docblock short'>
                              <p><code>is_not!(&amp;[T:AsBytes]) =&gt; &amp;[T] -&gt; IResult&lt;&amp;[T], &amp;[T]&gt;</code>
 returns the longest list of bytes that do not appear in the provided array</p>
-
-                        </td>
-                    </tr>
-                
-                    <tr class=' module-item'>
-                        <td><a class='macro' href='macro.is_not_bytes!.html'
-                               title='nom::is_not_bytes!'>is_not_bytes!</a></td>
-                        <td class='docblock short'>
-                             
+<pre class='rust rust-example-rendered'>
+ <span class='macro'>named</span><span class='macro'>!</span>( <span class='ident'>not_space</span>, <span class='macro'>is_not</span><span class='macro'>!</span>( <span class='string'>&quot; \t\r\n&quot;</span> ) );
                         </td>
                     </tr>
                 
@@ -446,7 +441,8 @@ returns the longest list of bytes that do not appear in the provided array</p>
                         <td class='docblock short'>
                              <p><code>is_not_s!(&amp;str) =&gt; &amp;str -&gt; IResult&lt;&amp;str, &amp;str&gt;</code>
 returns the longest list of characters that do not appear in the provided array</p>
-
+<pre class='rust rust-example-rendered'>
+ <span class='macro'>named</span><span class='macro'>!</span>( <span class='ident'>not_space</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='ident'>str</span>,<span class='kw-2'>&amp;</span><span class='ident'>str</span><span class='op'>&gt;</span>, <span class='macro'>is_not_s</span><span class='macro'>!</span>( <span class='string'>&quot; \t\r\n&quot;</span> ) );
                         </td>
                     </tr>
                 
@@ -457,7 +453,6 @@ returns the longest list of characters that do not appear in the provided array<
                              <p>`length_bytes!(&amp;[T] -&gt; IResult&lt;&amp;[T], nb&gt;) =&gt; &amp;[T] -&gt; IResult&lt;&amp;[T], &amp;[T]&gt;
 gets a number from the first parser, then extracts that many bytes from the
 remaining stream</p>
-
                         </td>
                     </tr>
                 
@@ -467,7 +462,6 @@ remaining stream</p>
                         <td class='docblock short'>
                              <p><code>length_value!(I -&gt; IResult&lt;I, nb&gt;, I -&gt; IResult&lt;I,O&gt;) =&gt; I -&gt; IResult&lt;I, Vec&lt;O&gt;&gt;</code>
 gets a number from the first parser, then applies the second parser that many times</p>
-
                         </td>
                     </tr>
                 
@@ -477,7 +471,6 @@ gets a number from the first parser, then applies the second parser that many ti
                         <td class='docblock short'>
                              <p><code>many0!(I -&gt; IResult&lt;I,O&gt;) =&gt; I -&gt; IResult&lt;I, Vec&lt;O&gt;&gt;</code>
 Applies the parser 0 or more times and returns the list of results in a Vec</p>
-
                         </td>
                     </tr>
                 
@@ -487,7 +480,6 @@ Applies the parser 0 or more times and returns the list of results in a Vec</p>
                         <td class='docblock short'>
                              <p><code>many1!(I -&gt; IResult&lt;I,O&gt;) =&gt; I -&gt; IResult&lt;I, Vec&lt;O&gt;&gt;</code>
 Applies the parser 1 or more times and returns the list of results in a Vec</p>
-
                         </td>
                     </tr>
                 
@@ -497,7 +489,6 @@ Applies the parser 1 or more times and returns the list of results in a Vec</p>
                         <td class='docblock short'>
                              <p><code>many_m_n!(usize, usize, I -&gt; IResult&lt;I,O&gt;) =&gt; I -&gt; IResult&lt;I, Vec&lt;O&gt;&gt;</code>
 Applies the parser between m and n times (n included) and returns the list of results in a Vec</p>
-
                         </td>
                     </tr>
                 
@@ -507,7 +498,6 @@ Applies the parser between m and n times (n included) and returns the list of re
                         <td class='docblock short'>
                              <p><code>map!(I -&gt; IResult&lt;I,O&gt;, O -&gt; P) =&gt; I -&gt; IResult&lt;I, P&gt;</code>
 maps a function on the result of a parser</p>
-
                         </td>
                     </tr>
                 
@@ -517,7 +507,6 @@ maps a function on the result of a parser</p>
                         <td class='docblock short'>
                              <p><code>map_opt!(I -&gt; IResult&lt;I,O&gt;, O -&gt; Option&lt;P&gt;) =&gt; I -&gt; IResult&lt;I, P&gt;</code>
 maps a function returning an Option on the output of a parser</p>
-
                         </td>
                     </tr>
                 
@@ -527,7 +516,14 @@ maps a function returning an Option on the output of a parser</p>
                         <td class='docblock short'>
                              <p><code>map_res!(I -&gt; IResult&lt;I,O&gt;, O -&gt; Result&lt;P&gt;) =&gt; I -&gt; IResult&lt;I, P&gt;</code>
 maps a function returning a Result on the output of a parser</p>
-
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='macro' href='macro.method!.html'
+                               title='nom::method!'>method!</a></td>
+                        <td class='docblock short'>
+                             <p>Makes a method from a parser combination</p>
                         </td>
                     </tr>
                 
@@ -536,7 +532,6 @@ maps a function returning a Result on the output of a parser</p>
                                title='nom::named!'>named!</a></td>
                         <td class='docblock short'>
                              <p>Makes a function from a parser combination</p>
-
                         </td>
                     </tr>
                 
@@ -545,15 +540,6 @@ maps a function returning a Result on the output of a parser</p>
                                title='nom::none_of!'>none_of!</a></td>
                         <td class='docblock short'>
                              <p>matches anything but the provided characters</p>
-
-                        </td>
-                    </tr>
-                
-                    <tr class=' module-item'>
-                        <td><a class='macro' href='macro.none_of_bytes!.html'
-                               title='nom::none_of_bytes!'>none_of_bytes!</a></td>
-                        <td class='docblock short'>
-                             
                         </td>
                     </tr>
                 
@@ -562,15 +548,6 @@ maps a function returning a Result on the output of a parser</p>
                                title='nom::one_of!'>one_of!</a></td>
                         <td class='docblock short'>
                              <p>matches one of the provided characters</p>
-
-                        </td>
-                    </tr>
-                
-                    <tr class=' module-item'>
-                        <td><a class='macro' href='macro.one_of_bytes!.html'
-                               title='nom::one_of_bytes!'>one_of_bytes!</a></td>
-                        <td class='docblock short'>
-                             
                         </td>
                     </tr>
                 
@@ -580,7 +557,6 @@ maps a function returning a Result on the output of a parser</p>
                         <td class='docblock short'>
                              <p><code>opt!(I -&gt; IResult&lt;I,O&gt;) =&gt; I -&gt; IResult&lt;I, Option&lt;O&gt;&gt;</code>
 make the underlying parser optional</p>
-
                         </td>
                     </tr>
                 
@@ -590,7 +566,6 @@ make the underlying parser optional</p>
                         <td class='docblock short'>
                              <p><code>opt_res!(I -&gt; IResult&lt;I,O&gt;) =&gt; I -&gt; IResult&lt;I, Result&lt;nom::Err,O&gt;&gt;</code>
 make the underlying parser optional</p>
-
                         </td>
                     </tr>
                 
@@ -600,7 +575,6 @@ make the underlying parser optional</p>
                         <td class='docblock short'>
                              <p><code>pair!(I -&gt; IResult&lt;I,O&gt;, I -&gt; IResult&lt;I,P&gt;) =&gt; I -&gt; IResult&lt;I, (O,P)&gt;</code>
 pair(X,Y), returns (x,y)</p>
-
                         </td>
                     </tr>
                 
@@ -610,7 +584,6 @@ pair(X,Y), returns (x,y)</p>
                         <td class='docblock short'>
                              <p><code>peek!(I -&gt; IResult&lt;I,O&gt;) =&gt; I -&gt; IResult&lt;I, O&gt;</code>
 returns a result without consuming the input</p>
-
                         </td>
                     </tr>
                 
@@ -620,7 +593,6 @@ returns a result without consuming the input</p>
                         <td class='docblock short'>
                              <p><code>preceded!(I -&gt; IResult&lt;I,T&gt;, I -&gt; IResult&lt;I,O&gt;) =&gt; I -&gt; IResult&lt;I, O&gt;</code>
 preceded(opening, X) returns X</p>
-
                         </td>
                     </tr>
                 
@@ -630,7 +602,10 @@ preceded(opening, X) returns X</p>
                         <td class='docblock short'>
                              <p><code>recognize!(&amp;[T] -&gt; IResult&lt;&amp;[T], O&gt; ) =&gt; &amp;[T] -&gt; IResult&lt;&amp;[T], &amp;[T]&gt;</code>
 if the child parser was successful, return the consumed input as produced value</p>
-
+<pre class='rust rust-example-rendered'>
+ <span class='macro'>named</span><span class='macro'>!</span>(<span class='ident'>x</span>, <span class='macro'>recognize</span><span class='macro'>!</span>(<span class='macro'>delimited</span><span class='macro'>!</span>(<span class='macro'>tag</span><span class='macro'>!</span>(<span class='string'>&quot;&lt;!--&quot;</span>), <span class='macro'>take</span><span class='macro'>!</span>(<span class='number'>5</span>), <span class='macro'>tag</span><span class='macro'>!</span>(<span class='string'>&quot;--&gt;&quot;</span>))));
+ <span class='kw'>let</span> <span class='ident'>r</span> <span class='op'>=</span> <span class='ident'>x</span>(<span class='kw-2'>&amp;</span><span class='string'>b&quot;&lt;!-- abc --&gt; aaa&quot;</span>[..]);
+ <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>r</span>, <span class='ident'>Done</span>(<span class='kw-2'>&amp;</span><span class='string'>b&quot; aaa&quot;</span>[..], <span class='kw-2'>&amp;</span><span class='string'>b&quot;&lt;!-- abc --&gt;&quot;</span>[..]));</pre>
                         </td>
                     </tr>
                 
@@ -640,7 +615,6 @@ if the child parser was successful, return the consumed input as produced value<
                         <td class='docblock short'>
                              <p><code>separated_list!(I -&gt; IResult&lt;I,T&gt;, I -&gt; IResult&lt;I,O&gt;) =&gt; I -&gt; IResult&lt;I, Vec&lt;O&gt;&gt;</code>
 separated_list(sep, X) returns Vec<X></p>
-
                         </td>
                     </tr>
                 
@@ -650,7 +624,6 @@ separated_list(sep, X) returns Vec<X></p>
                         <td class='docblock short'>
                              <p><code>separated_nonempty_list!(I -&gt; IResult&lt;I,T&gt;, I -&gt; IResult&lt;I,O&gt;) =&gt; I -&gt; IResult&lt;I, Vec&lt;O&gt;&gt;</code>
 separated_nonempty_list(sep, X) returns Vec<X></p>
-
                         </td>
                     </tr>
                 
@@ -660,7 +633,6 @@ separated_nonempty_list(sep, X) returns Vec<X></p>
                         <td class='docblock short'>
                              <p><code>separated_pair!(I -&gt; IResult&lt;I,O&gt;, I -&gt; IResult&lt;I, T&gt;, I -&gt; IResult&lt;I,P&gt;) =&gt; I -&gt; IResult&lt;I, (O,P)&gt;</code>
 separated_pair(X,sep,Y) returns (x,y)</p>
-
                         </td>
                     </tr>
                 
@@ -671,7 +643,13 @@ separated_pair(X,sep,Y) returns (x,y)</p>
                              <p><code>switch!(I -&gt; IResult&lt;I,P&gt;, P =&gt; I -&gt; IResult&lt;I,O&gt; | ... | P =&gt; I -&gt; IResult&lt;I,O&gt; ) =&gt; I -&gt; IResult&lt;I, O&gt;</code>
 choose the next parser depending on the result of the first one, if successful,
 and returns the result of the second parser</p>
-
+<pre class='rust rust-example-rendered'>
+ <span class='macro'>named</span><span class='macro'>!</span>(<span class='ident'>sw</span>,
+   <span class='macro'>switch</span><span class='macro'>!</span>(<span class='macro'>take</span><span class='macro'>!</span>(<span class='number'>4</span>),
+     <span class='string'>b&quot;abcd&quot;</span> <span class='op'>=&gt;</span> <span class='macro'>tag</span><span class='macro'>!</span>(<span class='string'>&quot;XYZ&quot;</span>) <span class='op'>|</span>
+     <span class='string'>b&quot;efgh&quot;</span> <span class='op'>=&gt;</span> <span class='macro'>tag</span><span class='macro'>!</span>(<span class='string'>&quot;123&quot;</span>)
+   )
+ );
                         </td>
                     </tr>
                 
@@ -681,7 +659,6 @@ and returns the result of the second parser</p>
                         <td class='docblock short'>
                              <p><code>tag!(&amp;[T]: nom::AsBytes) =&gt; &amp;[T] -&gt; IResult&lt;&amp;[T], &amp;[T]&gt;</code>
 declares a byte array as a suite to recognize</p>
-
                         </td>
                     </tr>
                 
@@ -689,15 +666,7 @@ declares a byte array as a suite to recognize</p>
                         <td><a class='macro' href='macro.tag_bits!.html'
                                title='nom::tag_bits!'>tag_bits!</a></td>
                         <td class='docblock short'>
-                             
-                        </td>
-                    </tr>
-                
-                    <tr class=' module-item'>
-                        <td><a class='macro' href='macro.tag_bytes!.html'
-                               title='nom::tag_bytes!'>tag_bytes!</a></td>
-                        <td class='docblock short'>
-                             
+                             <p>matches an integer pattern to a bitstream. The number of bits of the input to compare must be specified</p>
                         </td>
                     </tr>
                 
@@ -707,7 +676,6 @@ declares a byte array as a suite to recognize</p>
                         <td class='docblock short'>
                              <p><code>tag_s!(&amp;str) =&gt; &amp;str -&gt; IResult&lt;&amp;str, &amp;str&gt;</code>
 declares a string as a suite to recognize</p>
-
                         </td>
                     </tr>
                 
@@ -717,7 +685,9 @@ declares a string as a suite to recognize</p>
                         <td class='docblock short'>
                              <p><code>take!(nb) =&gt; &amp;[T] -&gt; IResult&lt;&amp;[T], &amp;[T]&gt;</code>
 generates a parser consuming the specified number of bytes</p>
-
+<pre class='rust rust-example-rendered'>
+ <span class='comment'>// Desmond parser</span>
+ <span class='macro'>named</span><span class='macro'>!</span>(<span class='ident'>take5</span>, <span class='macro'>take</span><span class='macro'>!</span>( <span class='number'>5</span> ) );
                         </td>
                     </tr>
                 
@@ -727,7 +697,8 @@ generates a parser consuming the specified number of bytes</p>
                         <td class='docblock short'>
                              <p><code>take_bits!(type, nb) =&gt; ( (&amp;[T], usize), U, usize) -&gt; IResult&lt;(&amp;[T], usize), U&gt;</code>
 generates a parser consuming the specified number of bytes</p>
-
+<pre class='rust rust-example-rendered'>
+ <span class='macro'>named</span><span class='macro'>!</span>( <span class='ident'>take_pair</span><span class='op'>&lt;</span>(<span class='ident'>u8</span>, <span class='ident'>u8</span>)<span class='op'>&gt;</span>, <span class='macro'>bits</span><span class='macro'>!</span>( <span class='macro'>pair</span><span class='macro'>!</span>( <span class='macro'>take_bits</span><span class='macro'>!</span>( <span class='ident'>u8</span>, <span class='number'>3</span> ), <span class='macro'>take_bits</span><span class='macro'>!</span>(<span class='ident'>u8</span>, <span class='number'>5</span>) ) ) );
                         </td>
                     </tr>
                 
@@ -737,7 +708,9 @@ generates a parser consuming the specified number of bytes</p>
                         <td class='docblock short'>
                              <p><code>take_s!(nb) =&gt; &amp;str -&gt; IResult&lt;&amp;str, &amp;str&gt;</code>
 generates a parser consuming the specified number of characters</p>
-
+<pre class='rust rust-example-rendered'>
+ <span class='comment'>// Desmond parser</span>
+ <span class='macro'>named</span><span class='macro'>!</span>(<span class='ident'>take5</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='ident'>str</span>,<span class='kw-2'>&amp;</span><span class='ident'>str</span><span class='op'>&gt;</span>, <span class='macro'>take_s</span><span class='macro'>!</span>( <span class='number'>5</span> ) );
                         </td>
                     </tr>
                 
@@ -747,7 +720,6 @@ generates a parser consuming the specified number of characters</p>
                         <td class='docblock short'>
                              <p><code>take!(nb) =&gt; &amp;[T] -&gt; IResult&lt;&amp;[T], &amp;str&gt;</code>
 same as take! but returning a &amp;str</p>
-
                         </td>
                     </tr>
                 
@@ -757,7 +729,6 @@ same as take! but returning a &amp;str</p>
                         <td class='docblock short'>
                              <p><code>take_till!(T -&gt; bool) =&gt; &amp;[T] -&gt; IResult&lt;&amp;[T], &amp;[T]&gt;</code>
 returns the longest list of bytes until the provided function succeeds</p>
-
                         </td>
                     </tr>
                 
@@ -765,9 +736,8 @@ returns the longest list of bytes until the provided function succeeds</p>
                         <td><a class='macro' href='macro.take_till_s!.html'
                                title='nom::take_till_s!'>take_till_s!</a></td>
                         <td class='docblock short'>
-                             <p><code>take_till_s!(T -&gt; bool) =&gt; &amp;[T] -&gt; IResult&lt;&amp;[T], &amp;[T]&gt;</code>
-returns the longest list of bytes until the provided function succeeds</p>
-
+                             <p><code>take_till_s!(&amp;str -&gt; bool) =&gt; &amp;str -&gt; IResult&lt;&amp;str, &amp;str&gt;</code>
+returns the longest list of characters until the provided function succeeds</p>
                         </td>
                     </tr>
                 
@@ -777,7 +747,6 @@ returns the longest list of bytes until the provided function succeeds</p>
                         <td class='docblock short'>
                              <p><code>take_until!(tag) =&gt; &amp;[T] -&gt; IResult&lt;&amp;[T], &amp;[T]&gt;</code>
 consumes data until it finds the specified tag</p>
-
                         </td>
                     </tr>
                 
@@ -787,23 +756,15 @@ consumes data until it finds the specified tag</p>
                         <td class='docblock short'>
                              <p><code>take_until_and_consume!(tag) =&gt; &amp;[T] -&gt; IResult&lt;&amp;[T], &amp;[T]&gt;</code>
 generates a parser consuming bytes until the specified byte sequence is found, and consumes it</p>
-
                         </td>
                     </tr>
                 
                     <tr class=' module-item'>
-                        <td><a class='macro' href='macro.take_until_and_consume_bytes!.html'
-                               title='nom::take_until_and_consume_bytes!'>take_until_and_consume_bytes!</a></td>
+                        <td><a class='macro' href='macro.take_until_and_consume_s!.html'
+                               title='nom::take_until_and_consume_s!'>take_until_and_consume_s!</a></td>
                         <td class='docblock short'>
-                             
-                        </td>
-                    </tr>
-                
-                    <tr class=' module-item'>
-                        <td><a class='macro' href='macro.take_until_bytes!.html'
-                               title='nom::take_until_bytes!'>take_until_bytes!</a></td>
-                        <td class='docblock short'>
-                             
+                             <p><code>take_until_and_consume_s!(&amp;str) =&gt; &amp;str -&gt; IResult&lt;&amp;str, &amp;str&gt;</code>
+generates a parser consuming all chars until the specified string is found and consumes it</p>
                         </td>
                     </tr>
                 
@@ -812,7 +773,6 @@ generates a parser consuming bytes until the specified byte sequence is found, a
                                title='nom::take_until_either!'>take_until_either!</a></td>
                         <td class='docblock short'>
                              <p><code>take_until_either!(tag) =&gt; &amp;[T] -&gt; IResult&lt;&amp;[T], &amp;[T]&gt;</code></p>
-
                         </td>
                     </tr>
                 
@@ -822,23 +782,15 @@ generates a parser consuming bytes until the specified byte sequence is found, a
                         <td class='docblock short'>
                              <p><code>take_until_either_and_consume!(tag) =&gt; &amp;[T] -&gt; IResult&lt;&amp;[T], &amp;[T]&gt;</code>
 consumes data until it finds any of the specified characters, and consume it</p>
-
                         </td>
                     </tr>
                 
                     <tr class=' module-item'>
-                        <td><a class='macro' href='macro.take_until_either_and_consume_bytes!.html'
-                               title='nom::take_until_either_and_consume_bytes!'>take_until_either_and_consume_bytes!</a></td>
+                        <td><a class='macro' href='macro.take_until_s!.html'
+                               title='nom::take_until_s!'>take_until_s!</a></td>
                         <td class='docblock short'>
-                             
-                        </td>
-                    </tr>
-                
-                    <tr class=' module-item'>
-                        <td><a class='macro' href='macro.take_until_either_bytes!.html'
-                               title='nom::take_until_either_bytes!'>take_until_either_bytes!</a></td>
-                        <td class='docblock short'>
-                             
+                             <p><code>take_until_s!(&amp;str) =&gt; &amp;str -&gt; IResult&lt;&amp;str, &amp;str&gt;</code>
+generates a parser consuming all chars until the specified string is found and leaves it in the remaining input</p>
                         </td>
                     </tr>
                 
@@ -848,7 +800,6 @@ consumes data until it finds any of the specified characters, and consume it</p>
                         <td class='docblock short'>
                              <p><code>take_while!(T -&gt; bool) =&gt; &amp;[T] -&gt; IResult&lt;&amp;[T], &amp;[T]&gt;</code>
 returns the longest list of bytes until the provided function fails.</p>
-
                         </td>
                     </tr>
                 
@@ -858,7 +809,6 @@ returns the longest list of bytes until the provided function fails.</p>
                         <td class='docblock short'>
                              <p><code>take_while1!(&amp;[T] -&gt; bool) =&gt; &amp;[T] -&gt; IResult&lt;&amp;[T], &amp;[T]&gt;</code>
 returns the longest (non empty) list of bytes until the provided function fails.</p>
-
                         </td>
                     </tr>
                 
@@ -866,9 +816,8 @@ returns the longest (non empty) list of bytes until the provided function fails.
                         <td><a class='macro' href='macro.take_while1_s!.html'
                                title='nom::take_while1_s!'>take_while1_s!</a></td>
                         <td class='docblock short'>
-                             <p><code>take_while1!(T -&gt; bool) =&gt; &amp;[T] -&gt; IResult&lt;&amp;[T], &amp;[T]&gt;</code>
-returns the longest (non empty) list of bytes until the provided function fails.</p>
-
+                             <p><code>take_while1_s!(char -&gt; bool) =&gt; &amp;str -&gt; IResult&lt;&amp;str, &amp;str&gt;</code>
+returns the longest (non empty) list of characters until the provided function fails.</p>
                         </td>
                     </tr>
                 
@@ -876,9 +825,8 @@ returns the longest (non empty) list of bytes until the provided function fails.
                         <td><a class='macro' href='macro.take_while_s!.html'
                                title='nom::take_while_s!'>take_while_s!</a></td>
                         <td class='docblock short'>
-                             <p><code>take_while!(char -&gt; bool) =&gt; &amp;str -&gt; IResult&lt;&amp;str, &amp;str&gt;</code>
-returns the longest list of bytes until the provided function fails.</p>
-
+                             <p><code>take_while_s!(char -&gt; bool) =&gt; &amp;str -&gt; IResult&lt;&amp;str, &amp;str&gt;</code>
+returns the longest list of characters until the provided function fails.</p>
                         </td>
                     </tr>
                 
@@ -888,7 +836,8 @@ returns the longest list of bytes until the provided function fails.</p>
                         <td class='docblock short'>
                              <p><code>tap!(name: I -&gt; IResult&lt;I,O&gt; =&gt; { block }) =&gt; I -&gt; IResult&lt;I, O&gt;</code>
 allows access to the parser&#39;s result without affecting it</p>
-
+<pre class='rust rust-example-rendered'>
+ <span class='macro'>named</span><span class='macro'>!</span>(<span class='ident'>ptag</span>, <span class='macro'>tap</span><span class='macro'>!</span>(<span class='ident'>res</span>: <span class='macro'>tag</span><span class='macro'>!</span>( <span class='string'>&quot;abcd&quot;</span> ) <span class='op'>=&gt;</span> { <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;recognized {}&quot;</span>, <span class='ident'>str</span>::<span class='ident'>from_utf8</span>(<span class='ident'>res</span>).<span class='ident'>unwrap</span>()) } ) );
                         </td>
                     </tr>
                 
@@ -898,7 +847,6 @@ allows access to the parser&#39;s result without affecting it</p>
                         <td class='docblock short'>
                              <p><code>terminated!(I -&gt; IResult&lt;I,O&gt;, I -&gt; IResult&lt;I,T&gt;) =&gt; I -&gt; IResult&lt;I, O&gt;</code>
 terminated(X, closing) returns X</p>
-
                         </td>
                     </tr>
                 
@@ -909,7 +857,16 @@ terminated(X, closing) returns X</p>
                              <p>A bit like <code>std::try!</code>, this macro will return the remaining input and parsed value if the child parser returned <code>Done</code>,
 and will do an early return for <code>Error</code> and <code>Incomplete</code>
 this can provide more flexibility than <code>chain!</code> if needed</p>
-
+<pre class='rust rust-example-rendered'>
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='macro' href='macro.tuple!.html'
+                               title='nom::tuple!'>tuple!</a></td>
+                        <td class='docblock short'>
+                             <p><code>tuple!(I-&gt;IResult&lt;I,A&gt;, I-&gt;IResult&lt;I,B&gt;, ... I-&gt;IResult&lt;I,X&gt;) =&gt; I -&gt; IResult&lt;I, (A, B, ..., X)&gt;</code>
+chains parsers and assemble the sub results in a tuple.</p>
                         </td>
                     </tr>
                 
@@ -919,7 +876,6 @@ this can provide more flexibility than <code>chain!</code> if needed</p>
                         <td class='docblock short'>
                              <p>if parameter is true, parse a big endian u16 integer,
 otherwise a little endian u16 integer</p>
-
                         </td>
                     </tr>
                 
@@ -929,7 +885,6 @@ otherwise a little endian u16 integer</p>
                         <td class='docblock short'>
                              <p>if parameter is true, parse a big endian u32 integer,
 otherwise a little endian u32 integer</p>
-
                         </td>
                     </tr>
                 
@@ -939,7 +894,6 @@ otherwise a little endian u32 integer</p>
                         <td class='docblock short'>
                              <p>if parameter is true, parse a big endian u64 integer,
 otherwise a little endian u64 integer</p>
-
                         </td>
                     </tr>
                 
@@ -948,7 +902,6 @@ otherwise a little endian u64 integer</p>
                                title='nom::value!'>value!</a></td>
                         <td class='docblock short'>
                              <p><code>value!(T, R -&gt; IResult&lt;R, S&gt; ) =&gt; R -&gt; IResult&lt;R, T&gt;</code></p>
-
                         </td>
                     </tr>
                 </table><h2 id='structs' class='section-header'><a href="#structs">Structs</a></h2>
@@ -958,7 +911,6 @@ otherwise a little endian u64 integer</p>
                                title='nom::ChainConsumer'>ChainConsumer</a></td>
                         <td class='docblock short'>
                              <p>ChainConsumer takes a consumer C1 R -&gt; S, and a consumer C2 S -&gt; T, and makes a consumer R -&gt; T by applying C2 on C1&#39;s result</p>
-
                         </td>
                     </tr>
                 
@@ -975,7 +927,6 @@ otherwise a little endian u64 integer</p>
                                title='nom::MapConsumer'>MapConsumer</a></td>
                         <td class='docblock short'>
                              <p>MapConsumer takes a function S -&gt; T and applies it on a consumer producing values of type S</p>
-
                         </td>
                     </tr>
                 
@@ -984,7 +935,6 @@ otherwise a little endian u64 integer</p>
                                title='nom::MemProducer'>MemProducer</a></td>
                         <td class='docblock short'>
                              <p>A MemProducer generates values from an in memory byte buffer</p>
-
                         </td>
                     </tr>
                 
@@ -993,7 +943,6 @@ otherwise a little endian u64 integer</p>
                                title='nom::ProducerRepeat'>ProducerRepeat</a></td>
                         <td class='docblock short'>
                              <p>ProducerRepeat takes a single value, and generates it at each step</p>
-
                         </td>
                     </tr>
                 </table><h2 id='enums' class='section-header'><a href="#enums">Enums</a></h2>
@@ -1003,7 +952,6 @@ otherwise a little endian u64 integer</p>
                                title='nom::ConsumerState'>ConsumerState</a></td>
                         <td class='docblock short'>
                              <p>Stores a consumer&#39;s current computation state</p>
-
                         </td>
                     </tr>
                 
@@ -1012,7 +960,6 @@ otherwise a little endian u64 integer</p>
                                title='nom::Err'>Err</a></td>
                         <td class='docblock short'>
                              <p>Contains the error that a parser can return</p>
-
                         </td>
                     </tr>
                 
@@ -1021,7 +968,6 @@ otherwise a little endian u64 integer</p>
                                title='nom::ErrorKind'>ErrorKind</a></td>
                         <td class='docblock short'>
                              <p>indicates which parser returned an error</p>
-
                         </td>
                     </tr>
                 
@@ -1038,7 +984,6 @@ otherwise a little endian u64 integer</p>
                                title='nom::IResult'>IResult</a></td>
                         <td class='docblock short'>
                              <p>Holds the result of parsing functions</p>
-
                         </td>
                     </tr>
                 
@@ -1063,7 +1008,6 @@ otherwise a little endian u64 integer</p>
                                title='nom::Needed'>Needed</a></td>
                         <td class='docblock short'>
                              <p>Contains information on needed data if a parser returned <code>Incomplete</code></p>
-
                         </td>
                     </tr>
                 </table><h2 id='traits' class='section-header'><a href="#traits">Traits</a></h2>
@@ -1089,7 +1033,6 @@ otherwise a little endian u64 integer</p>
                                title='nom::Consumer'>Consumer</a></td>
                         <td class='docblock short'>
                              <p>The Consumer trait wraps a computation and its state</p>
-
                         </td>
                     </tr>
                 
@@ -1114,7 +1057,6 @@ otherwise a little endian u64 integer</p>
                                title='nom::HexDisplay'>HexDisplay</a></td>
                         <td class='docblock short'>
                              <p>useful functions to calculate the offset between slices and show a hexdump of a slice</p>
-
                         </td>
                     </tr>
                 
@@ -1139,7 +1081,6 @@ otherwise a little endian u64 integer</p>
                                title='nom::Producer'>Producer</a></td>
                         <td class='docblock short'>
                              <p>The producer wraps a data source, like file or network, and applies a consumer on it</p>
-
                         </td>
                     </tr>
                 </table><h2 id='functions' class='section-header'><a href="#functions">Functions</a></h2>
@@ -1157,7 +1098,6 @@ otherwise a little endian u64 integer</p>
                                title='nom::alpha'>alpha</a></td>
                         <td class='docblock short'>
                              <p>Recognizes lowercase and uppercase alphabetic characters: a-zA-Z</p>
-
                         </td>
                     </tr>
                 
@@ -1166,7 +1106,6 @@ otherwise a little endian u64 integer</p>
                                title='nom::alphanumeric'>alphanumeric</a></td>
                         <td class='docblock short'>
                              <p>Recognizes numerical and alphabetic characters: 0-9a-zA-Z</p>
-
                         </td>
                     </tr>
                 
@@ -1183,7 +1122,6 @@ otherwise a little endian u64 integer</p>
                                title='nom::be_f32'>be_f32</a></td>
                         <td class='docblock short'>
                              <p>Recognizes big endian 4 bytes floating point number</p>
-
                         </td>
                     </tr>
                 
@@ -1192,7 +1130,6 @@ otherwise a little endian u64 integer</p>
                                title='nom::be_f64'>be_f64</a></td>
                         <td class='docblock short'>
                              <p>Recognizes big endian 8 bytes floating point number</p>
-
                         </td>
                     </tr>
                 
@@ -1201,7 +1138,6 @@ otherwise a little endian u64 integer</p>
                                title='nom::be_i16'>be_i16</a></td>
                         <td class='docblock short'>
                              <p>Recognizes big endian signed 2 bytes integer</p>
-
                         </td>
                     </tr>
                 
@@ -1210,7 +1146,6 @@ otherwise a little endian u64 integer</p>
                                title='nom::be_i32'>be_i32</a></td>
                         <td class='docblock short'>
                              <p>Recognizes big endian signed 4 bytes integer</p>
-
                         </td>
                     </tr>
                 
@@ -1219,7 +1154,6 @@ otherwise a little endian u64 integer</p>
                                title='nom::be_i64'>be_i64</a></td>
                         <td class='docblock short'>
                              <p>Recognizes big endian signed 8 bytes integer</p>
-
                         </td>
                     </tr>
                 
@@ -1228,7 +1162,6 @@ otherwise a little endian u64 integer</p>
                                title='nom::be_i8'>be_i8</a></td>
                         <td class='docblock short'>
                              <p>Recognizes a signed 1 byte integer (equivalent to take!(1)</p>
-
                         </td>
                     </tr>
                 
@@ -1237,7 +1170,6 @@ otherwise a little endian u64 integer</p>
                                title='nom::be_u16'>be_u16</a></td>
                         <td class='docblock short'>
                              <p>Recognizes big endian unsigned 2 bytes integer</p>
-
                         </td>
                     </tr>
                 
@@ -1246,7 +1178,6 @@ otherwise a little endian u64 integer</p>
                                title='nom::be_u32'>be_u32</a></td>
                         <td class='docblock short'>
                              <p>Recognizes big endian unsigned 4 bytes integer</p>
-
                         </td>
                     </tr>
                 
@@ -1255,7 +1186,6 @@ otherwise a little endian u64 integer</p>
                                title='nom::be_u64'>be_u64</a></td>
                         <td class='docblock short'>
                              <p>Recognizes big endian unsigned 8 bytes integer</p>
-
                         </td>
                     </tr>
                 
@@ -1264,7 +1194,6 @@ otherwise a little endian u64 integer</p>
                                title='nom::be_u8'>be_u8</a></td>
                         <td class='docblock short'>
                              <p>Recognizes an unsigned 1 byte integer (equivalent to take!(1)</p>
-
                         </td>
                     </tr>
                 
@@ -1305,7 +1234,6 @@ otherwise a little endian u64 integer</p>
                                title='nom::digit'>digit</a></td>
                         <td class='docblock short'>
                              <p>Recognizes numerical characters: 0-9</p>
-
                         </td>
                     </tr>
                 
@@ -1314,7 +1242,6 @@ otherwise a little endian u64 integer</p>
                                title='nom::eof'>eof</a></td>
                         <td class='docblock short'>
                              <p>Recognizes empty input buffers</p>
-
                         </td>
                     </tr>
                 
@@ -1351,11 +1278,18 @@ otherwise a little endian u64 integer</p>
                     </tr>
                 
                     <tr class=' module-item'>
+                        <td><a class='fn' href='fn.hex_digit.html'
+                               title='nom::hex_digit'>hex_digit</a></td>
+                        <td class='docblock short'>
+                             <p>Recognizes hexadecimal numerical characters: 0-9, A-F, a-f</p>
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
                         <td><a class='fn' href='fn.hex_u32.html'
                                title='nom::hex_u32'>hex_u32</a></td>
                         <td class='docblock short'>
                              <p>Recognizes a hex-encoded integer</p>
-
                         </td>
                     </tr>
                 
@@ -1384,6 +1318,14 @@ otherwise a little endian u64 integer</p>
                     </tr>
                 
                     <tr class=' module-item'>
+                        <td><a class='fn' href='fn.is_hex_digit.html'
+                               title='nom::is_hex_digit'>is_hex_digit</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
                         <td><a class='fn' href='fn.is_space.html'
                                title='nom::is_space'>is_space</a></td>
                         <td class='docblock short'>
@@ -1396,7 +1338,6 @@ otherwise a little endian u64 integer</p>
                                title='nom::le_i16'>le_i16</a></td>
                         <td class='docblock short'>
                              <p>Recognizes little endian signed 2 bytes integer</p>
-
                         </td>
                     </tr>
                 
@@ -1405,7 +1346,6 @@ otherwise a little endian u64 integer</p>
                                title='nom::le_i32'>le_i32</a></td>
                         <td class='docblock short'>
                              <p>Recognizes little endian signed 4 bytes integer</p>
-
                         </td>
                     </tr>
                 
@@ -1414,7 +1354,6 @@ otherwise a little endian u64 integer</p>
                                title='nom::le_i64'>le_i64</a></td>
                         <td class='docblock short'>
                              <p>Recognizes little endian signed 8 bytes integer</p>
-
                         </td>
                     </tr>
                 
@@ -1423,7 +1362,6 @@ otherwise a little endian u64 integer</p>
                                title='nom::le_i8'>le_i8</a></td>
                         <td class='docblock short'>
                              <p>Recognizes a signed 1 byte integer (equivalent to take!(1)</p>
-
                         </td>
                     </tr>
                 
@@ -1432,7 +1370,6 @@ otherwise a little endian u64 integer</p>
                                title='nom::le_u16'>le_u16</a></td>
                         <td class='docblock short'>
                              <p>Recognizes little endian unsigned 2 bytes integer</p>
-
                         </td>
                     </tr>
                 
@@ -1441,7 +1378,6 @@ otherwise a little endian u64 integer</p>
                                title='nom::le_u32'>le_u32</a></td>
                         <td class='docblock short'>
                              <p>Recognizes little endian unsigned 4 bytes integer</p>
-
                         </td>
                     </tr>
                 
@@ -1450,7 +1386,6 @@ otherwise a little endian u64 integer</p>
                                title='nom::le_u64'>le_u64</a></td>
                         <td class='docblock short'>
                              <p>Recognizes little endian unsigned 8 bytes integer</p>
-
                         </td>
                     </tr>
                 
@@ -1459,7 +1394,6 @@ otherwise a little endian u64 integer</p>
                                title='nom::le_u8'>le_u8</a></td>
                         <td class='docblock short'>
                              <p>Recognizes an unsigned 1 byte integer (equivalent to take!(1)</p>
-
                         </td>
                     </tr>
                 
@@ -1476,7 +1410,6 @@ otherwise a little endian u64 integer</p>
                                title='nom::line_ending'>line_ending</a></td>
                         <td class='docblock short'>
                              <p>Recognizes a line feed</p>
-
                         </td>
                     </tr>
                 
@@ -1485,7 +1418,6 @@ otherwise a little endian u64 integer</p>
                                title='nom::multispace'>multispace</a></td>
                         <td class='docblock short'>
                              <p>Recognizes spaces, tabs, carriage returns and line feeds</p>
-
                         </td>
                     </tr>
                 
@@ -1502,7 +1434,6 @@ otherwise a little endian u64 integer</p>
                                title='nom::non_empty'>non_empty</a></td>
                         <td class='docblock short'>
                              <p>Recognizes non empty buffers</p>
-
                         </td>
                     </tr>
                 
@@ -1567,7 +1498,6 @@ otherwise a little endian u64 integer</p>
                                title='nom::rest'>rest</a></td>
                         <td class='docblock short'>
                              <p>Return the remaining input.</p>
-
                         </td>
                     </tr>
                 
@@ -1600,7 +1530,6 @@ otherwise a little endian u64 integer</p>
                                title='nom::space'>space</a></td>
                         <td class='docblock short'>
                              <p>Recognizes spaces and tabs</p>
-
                         </td>
                     </tr>
                 

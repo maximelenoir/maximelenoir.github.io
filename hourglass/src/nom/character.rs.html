@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/maxime/.cargo/registry/src/github.com-88ac128001ac3a9a/nom-1.1.0/src/character.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/maxime/.multirust/toolchains/nightly/cargo/registry/src/github.com-88ac128001ac3a9a/nom-1.2.0/src/character.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>character.rs.html -- source</title>
@@ -223,6 +223,8 @@
 <span id="180">180</span>
 <span id="181">181</span>
 <span id="182">182</span>
+<span id="183">183</span>
+<span id="184">184</span>
 </pre><pre class='rust '>
 <span class='doccomment'>/// Character level parsers</span>
 
@@ -235,7 +237,7 @@
   (<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>i</span>:<span class='ident'>expr</span>, <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>inp</span>: <span class='ident'>expr</span>) <span class='op'>=&gt;</span> (
     {
       <span class='kw'>if</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>i</span>.<span class='ident'>is_empty</span>() {
-        <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>crate</span>::<span class='ident'>IResult</span>::<span class='ident'>Incomplete</span>(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>crate</span>::<span class='ident'>Needed</span>::<span class='ident'>Size</span>(<span class='number'>1</span>))
+        <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>crate</span>::<span class='ident'>IResult</span>::<span class='ident'>Incomplete</span>::<span class='op'>&lt;</span>_, _<span class='op'>&gt;</span>(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>crate</span>::<span class='ident'>Needed</span>::<span class='ident'>Size</span>(<span class='number'>1</span>))
       } <span class='kw'>else</span> {
         <span class='attribute'>#[<span class='ident'>inline</span>(<span class='ident'>always</span>)]</span>
         <span class='kw'>fn</span> <span class='ident'>as_bytes</span><span class='op'>&lt;</span><span class='ident'>T</span>: <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>crate</span>::<span class='ident'>AsBytes</span><span class='op'>&gt;</span>(<span class='ident'>b</span>: <span class='kw-2'>&amp;</span><span class='ident'>T</span>) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span>[<span class='ident'>u8</span>] {
@@ -250,12 +252,13 @@
   );
 );
 
+<span class='attribute'>#[<span class='ident'>doc</span>(<span class='ident'>hidden</span>)]</span>
 <span class='attribute'>#[<span class='ident'>macro_export</span>]</span>
 <span class='macro'>macro_rules</span><span class='macro'>!</span> <span class='ident'>one_of_bytes</span> (
   (<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>i</span>:<span class='ident'>expr</span>, <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>bytes</span>: <span class='ident'>expr</span>) <span class='op'>=&gt;</span> (
     {
       <span class='kw'>if</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>i</span>.<span class='ident'>is_empty</span>() {
-        <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>crate</span>::<span class='ident'>IResult</span>::<span class='ident'>Incomplete</span>(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>crate</span>::<span class='ident'>Needed</span>::<span class='ident'>Size</span>(<span class='number'>1</span>))
+        <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>crate</span>::<span class='ident'>IResult</span>::<span class='ident'>Incomplete</span>::<span class='op'>&lt;</span>_, _<span class='op'>&gt;</span>(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>crate</span>::<span class='ident'>Needed</span>::<span class='ident'>Size</span>(<span class='number'>1</span>))
       } <span class='kw'>else</span> {
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>found</span> <span class='op'>=</span> <span class='boolval'>false</span>;
 
@@ -282,7 +285,7 @@
   (<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>i</span>:<span class='ident'>expr</span>, <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>inp</span>: <span class='ident'>expr</span>) <span class='op'>=&gt;</span> (
     {
       <span class='kw'>if</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>i</span>.<span class='ident'>is_empty</span>() {
-        <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>crate</span>::<span class='ident'>IResult</span>::<span class='ident'>Incomplete</span>(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>crate</span>::<span class='ident'>Needed</span>::<span class='ident'>Size</span>(<span class='number'>1</span>))
+        <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>crate</span>::<span class='ident'>IResult</span>::<span class='ident'>Incomplete</span>::<span class='op'>&lt;</span>_, _<span class='op'>&gt;</span>(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>crate</span>::<span class='ident'>Needed</span>::<span class='ident'>Size</span>(<span class='number'>1</span>))
       } <span class='kw'>else</span> {
         <span class='attribute'>#[<span class='ident'>inline</span>(<span class='ident'>always</span>)]</span>
         <span class='kw'>fn</span> <span class='ident'>as_bytes</span><span class='op'>&lt;</span><span class='ident'>T</span>: <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>crate</span>::<span class='ident'>AsBytes</span><span class='op'>&gt;</span>(<span class='ident'>b</span>: <span class='kw-2'>&amp;</span><span class='ident'>T</span>) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span>[<span class='ident'>u8</span>] {
@@ -297,12 +300,13 @@
   );
 );
 
+<span class='attribute'>#[<span class='ident'>doc</span>(<span class='ident'>hidden</span>)]</span>
 <span class='attribute'>#[<span class='ident'>macro_export</span>]</span>
 <span class='macro'>macro_rules</span><span class='macro'>!</span> <span class='ident'>none_of_bytes</span> (
   (<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>i</span>:<span class='ident'>expr</span>, <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>bytes</span>: <span class='ident'>expr</span>) <span class='op'>=&gt;</span> (
     {
       <span class='kw'>if</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>i</span>.<span class='ident'>is_empty</span>() {
-        <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>crate</span>::<span class='ident'>IResult</span>::<span class='ident'>Incomplete</span>(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>crate</span>::<span class='ident'>Needed</span>::<span class='ident'>Size</span>(<span class='number'>1</span>))
+        <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>crate</span>::<span class='ident'>IResult</span>::<span class='ident'>Incomplete</span>::<span class='op'>&lt;</span>_, _<span class='op'>&gt;</span>(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>crate</span>::<span class='ident'>Needed</span>::<span class='ident'>Size</span>(<span class='number'>1</span>))
       } <span class='kw'>else</span> {
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>found</span> <span class='op'>=</span> <span class='boolval'>false</span>;
 

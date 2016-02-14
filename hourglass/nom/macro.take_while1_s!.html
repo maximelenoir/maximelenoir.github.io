@@ -46,16 +46,16 @@
             <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                 [<span class='inner'>&#x2212;</span>]
             </a>
-        </span><a id='src-1711' class='srclink' href='../src/nom/str.rs.html#199-222' title='goto source code'>[src]</a></span></h1>
+        </span><a id='src-1765' class='srclink' href='../src/nom/str.rs.html#212-234' title='goto source code'>[src]</a></span></h1>
 <pre class='rust macro'>
 <span class='macro'>macro_rules</span><span class='macro'>!</span> <span class='ident'>take_while1_s</span> {
     (<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>input</span>:<span class='ident'>expr</span>, <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>submac</span>:<span class='macro'>ident</span><span class='macro'>!</span>( $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>args</span>:<span class='ident'>tt</span>)<span class='op'>*</span> )) <span class='op'>=&gt;</span> { ... };
     (<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>input</span>:<span class='ident'>expr</span>, <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>f</span>:<span class='ident'>expr</span>) <span class='op'>=&gt;</span> { ... };
 }</pre>
-<div class='docblock'><p><code>take_while1!(T -&gt; bool) =&gt; &amp;[T] -&gt; IResult&lt;&amp;[T], &amp;[T]&gt;</code>
-returns the longest (non empty) list of bytes until the provided function fails.</p>
+<div class='docblock'><p><code>take_while1_s!(char -&gt; bool) =&gt; &amp;str -&gt; IResult&lt;&amp;str, &amp;str&gt;</code>
+returns the longest (non empty) list of characters until the provided function fails.</p>
 
-<p>The argument is either a function <code>T -&gt; bool</code> or a macro returning a <code>bool</code>
+<p>The argument is either a function <code>char -&gt; bool</code> or a macro returning a <code>bool</code>
 ```</p>
 
 <h1 id='macro_use-extern-crate-nom' class='section-header'><a href='#macro_use-extern-crate-nom'>#[macro_use] extern crate nom;</a></h1>

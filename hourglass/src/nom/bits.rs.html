@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/maxime/.cargo/registry/src/github.com-88ac128001ac3a9a/nom-1.1.0/src/bits.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/maxime/.multirust/toolchains/nightly/cargo/registry/src/github.com-88ac128001ac3a9a/nom-1.2.0/src/bits.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>bits.rs.html -- source</title>
@@ -260,6 +260,7 @@
 <span id="217">217</span>
 <span id="218">218</span>
 <span id="219">219</span>
+<span id="220">220</span>
 </pre><pre class='rust '>
 <span class='doccomment'>//! Bit level parsers and combinators</span>
 <span class='doccomment'>//!</span>
@@ -395,6 +396,7 @@
   );
 );
 
+<span class='doccomment'>/// matches an integer pattern to a bitstream. The number of bits of the input to compare must be specified</span>
 <span class='attribute'>#[<span class='ident'>macro_export</span>]</span>
 <span class='macro'>macro_rules</span><span class='macro'>!</span> <span class='ident'>tag_bits</span> (
   (<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>i</span>:<span class='ident'>expr</span>, <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>t</span>:<span class='ident'>ty</span>, <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>count</span>:<span class='ident'>expr</span>, <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>p</span>: <span class='ident'>pat</span>) <span class='op'>=&gt;</span> (

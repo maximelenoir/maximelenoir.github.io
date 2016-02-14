@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/maxime/.cargo/registry/src/github.com-88ac128001ac3a9a/nom-1.1.0/src/internal.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/maxime/.multirust/toolchains/nightly/cargo/registry/src/github.com-88ac128001ac3a9a/nom-1.2.0/src/internal.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>internal.rs.html -- source</title>
@@ -222,7 +222,7 @@
   <span class='ident'>Incomplete</span>(<span class='ident'>Needed</span>)
 }
 
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>I</span>,<span class='ident'>O</span><span class='op'>&gt;</span> <span class='ident'>IResult</span><span class='op'>&lt;</span><span class='ident'>I</span>,<span class='ident'>O</span><span class='op'>&gt;</span> {
+<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>I</span>,<span class='ident'>O</span>,<span class='ident'>E</span><span class='op'>&gt;</span> <span class='ident'>IResult</span><span class='op'>&lt;</span><span class='ident'>I</span>,<span class='ident'>O</span>,<span class='ident'>E</span><span class='op'>&gt;</span> {
   <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>is_done</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>bool</span> {
     <span class='kw'>match</span> <span class='op'>*</span><span class='self'>self</span> {
       <span class='ident'>Done</span>(_,_) <span class='op'>=&gt;</span> <span class='boolval'>true</span>,
@@ -253,7 +253,7 @@
   <span class='kw'>fn</span> <span class='ident'>output</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>O</span><span class='op'>&gt;</span>;
 }
 
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>,<span class='ident'>I</span>,<span class='ident'>O</span><span class='op'>&gt;</span> <span class='ident'>GetInput</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span>[<span class='ident'>I</span>]<span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>IResult</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span>[<span class='ident'>I</span>],<span class='ident'>O</span><span class='op'>&gt;</span> {
+<span class='kw'>impl</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>,<span class='ident'>I</span>,<span class='ident'>O</span>,<span class='ident'>E</span><span class='op'>&gt;</span> <span class='ident'>GetInput</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span>[<span class='ident'>I</span>]<span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>IResult</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span>[<span class='ident'>I</span>],<span class='ident'>O</span>,<span class='ident'>E</span><span class='op'>&gt;</span> {
   <span class='kw'>fn</span> <span class='ident'>remaining_input</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span>[<span class='ident'>I</span>]<span class='op'>&gt;</span> {
     <span class='kw'>match</span> <span class='op'>*</span><span class='self'>self</span> {
       <span class='ident'>Done</span>(<span class='kw-2'>ref</span> <span class='ident'>i</span>,_) <span class='op'>=&gt;</span> <span class='prelude-val'>Some</span>(<span class='op'>*</span><span class='ident'>i</span>),
@@ -262,7 +262,7 @@
   }
 }
 
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>O</span><span class='op'>&gt;</span> <span class='ident'>GetInput</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>IResult</span><span class='op'>&lt;</span>(),<span class='ident'>O</span><span class='op'>&gt;</span> {
+<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>O</span>,<span class='ident'>E</span><span class='op'>&gt;</span> <span class='ident'>GetInput</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>IResult</span><span class='op'>&lt;</span>(),<span class='ident'>O</span>,<span class='ident'>E</span><span class='op'>&gt;</span> {
   <span class='kw'>fn</span> <span class='ident'>remaining_input</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
     <span class='kw'>match</span> <span class='op'>*</span><span class='self'>self</span> {
       <span class='ident'>Done</span>((),_) <span class='op'>=&gt;</span> <span class='prelude-val'>Some</span>(()),
@@ -271,7 +271,7 @@
   }
 }
 
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>,<span class='ident'>O</span><span class='op'>&gt;</span> <span class='ident'>GetInput</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>str</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>IResult</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>str</span>,<span class='ident'>O</span><span class='op'>&gt;</span> {
+<span class='kw'>impl</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>,<span class='ident'>O</span>,<span class='ident'>E</span><span class='op'>&gt;</span> <span class='ident'>GetInput</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>str</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>IResult</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>str</span>,<span class='ident'>O</span>,<span class='ident'>E</span><span class='op'>&gt;</span> {
   <span class='kw'>fn</span> <span class='ident'>remaining_input</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>str</span><span class='op'>&gt;</span> {
     <span class='kw'>match</span> <span class='op'>*</span><span class='self'>self</span> {
       <span class='ident'>Done</span>(<span class='kw-2'>ref</span> <span class='ident'>i</span>,_) <span class='op'>=&gt;</span> <span class='prelude-val'>Some</span>(<span class='op'>*</span><span class='ident'>i</span>),
@@ -280,7 +280,7 @@
   }
 }
 
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>,<span class='ident'>I</span>,<span class='ident'>O</span><span class='op'>&gt;</span> <span class='ident'>GetOutput</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span>[<span class='ident'>O</span>]<span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>IResult</span><span class='op'>&lt;</span><span class='ident'>I</span>,<span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span>[<span class='ident'>O</span>]<span class='op'>&gt;</span> {
+<span class='kw'>impl</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>,<span class='ident'>I</span>,<span class='ident'>O</span>,<span class='ident'>E</span><span class='op'>&gt;</span> <span class='ident'>GetOutput</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span>[<span class='ident'>O</span>]<span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>IResult</span><span class='op'>&lt;</span><span class='ident'>I</span>,<span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span>[<span class='ident'>O</span>],<span class='ident'>E</span><span class='op'>&gt;</span> {
   <span class='kw'>fn</span> <span class='ident'>output</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span>[<span class='ident'>O</span>]<span class='op'>&gt;</span> {
     <span class='kw'>match</span> <span class='op'>*</span><span class='self'>self</span> {
       <span class='ident'>Done</span>(_, <span class='kw-2'>ref</span> <span class='ident'>o</span>) <span class='op'>=&gt;</span> <span class='prelude-val'>Some</span>(<span class='op'>*</span><span class='ident'>o</span>),
@@ -289,7 +289,7 @@
   }
 }
 
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>I</span><span class='op'>&gt;</span> <span class='ident'>GetOutput</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>IResult</span><span class='op'>&lt;</span><span class='ident'>I</span>,()<span class='op'>&gt;</span> {
+<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>I</span>,<span class='ident'>E</span><span class='op'>&gt;</span> <span class='ident'>GetOutput</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>IResult</span><span class='op'>&lt;</span><span class='ident'>I</span>,(),<span class='ident'>E</span><span class='op'>&gt;</span> {
   <span class='kw'>fn</span> <span class='ident'>output</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
     <span class='kw'>match</span> <span class='op'>*</span><span class='self'>self</span> {
       <span class='ident'>Done</span>(_,()) <span class='op'>=&gt;</span> <span class='prelude-val'>Some</span>(()),
@@ -298,7 +298,7 @@
   }
 }
 
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>,<span class='ident'>I</span><span class='op'>&gt;</span> <span class='ident'>GetOutput</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>str</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>IResult</span><span class='op'>&lt;</span><span class='ident'>I</span>,<span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>str</span><span class='op'>&gt;</span> {
+<span class='kw'>impl</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>,<span class='ident'>I</span>,<span class='ident'>E</span><span class='op'>&gt;</span> <span class='ident'>GetOutput</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>str</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>IResult</span><span class='op'>&lt;</span><span class='ident'>I</span>,<span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>str</span>,<span class='ident'>E</span><span class='op'>&gt;</span> {
   <span class='kw'>fn</span> <span class='ident'>output</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>str</span><span class='op'>&gt;</span> {
     <span class='kw'>match</span> <span class='op'>*</span><span class='self'>self</span> {
       <span class='ident'>Done</span>(_,<span class='kw-2'>ref</span> <span class='ident'>o</span>) <span class='op'>=&gt;</span> <span class='prelude-val'>Some</span>(<span class='op'>*</span><span class='ident'>o</span>),

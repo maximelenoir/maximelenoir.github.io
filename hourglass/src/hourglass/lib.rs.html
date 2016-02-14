@@ -2199,6 +2199,19 @@
 <span id="2156">2156</span>
 <span id="2157">2157</span>
 <span id="2158">2158</span>
+<span id="2159">2159</span>
+<span id="2160">2160</span>
+<span id="2161">2161</span>
+<span id="2162">2162</span>
+<span id="2163">2163</span>
+<span id="2164">2164</span>
+<span id="2165">2165</span>
+<span id="2166">2166</span>
+<span id="2167">2167</span>
+<span id="2168">2168</span>
+<span id="2169">2169</span>
+<span id="2170">2170</span>
+<span id="2171">2171</span>
 </pre><pre class='rust '>
 <span class='doccomment'>//! `hourglass` provides support for timezone, datetime arithmetic and take care</span>
 <span class='doccomment'>//! of subtleties related to time handling, like leap seconds.</span>
@@ -2282,12 +2295,29 @@
 <span class='doccomment'>//! assert_eq!(t1 == t1, true);</span>
 <span class='doccomment'>//! assert_eq!(t1 - t0, Deltatime::seconds(86401));</span>
 <span class='doccomment'>//! ```</span>
+<span class='doccomment'>//!</span>
+<span class='doccomment'>//! `hourglass` also provides a convenient iterator for scheduling a loop</span>
+<span class='doccomment'>//! body execution at regular time interval:</span>
+<span class='doccomment'>//!</span>
+<span class='doccomment'>//! ```rust</span>
+<span class='doccomment'>//! use hourglass::{Timezone, Deltatime, Timespec, Every};</span>
+<span class='doccomment'>//!</span>
+<span class='doccomment'>//! let paris = Timezone::new(&quot;Europe/Paris&quot;).unwrap();</span>
+<span class='doccomment'>//! let until = Timespec::now() + Deltatime::seconds(5);</span>
+<span class='doccomment'>//!</span>
+<span class='doccomment'>//! for t in Every::until(Deltatime::seconds(1), until) {</span>
+<span class='doccomment'>//!     println!(&quot;it is {} in Paris&quot;, t.to_datetime(&amp;paris).format(&quot;%H:%M:%S&quot;).unwrap());</span>
+<span class='doccomment'>//! }</span>
+<span class='doccomment'>//! ```</span>
 
 <span class='attribute'>#[<span class='ident'>macro_use</span>]</span>
 <span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>nom</span>;
 <span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>libc</span>;
 
 <span class='kw'>mod</span> <span class='ident'>parse</span>;
+<span class='kw'>mod</span> <span class='ident'>iter</span>;
+
+<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>iter</span>::<span class='ident'>Every</span>;
 
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>rc</span>::<span class='ident'>Rc</span>;
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>io</span>;
@@ -2463,6 +2493,11 @@
             <span class='ident'>tm_gmtoff</span>: <span class='number'>0</span>,
             <span class='ident'>tm_zone</span>: <span class='ident'>ptr</span>::<span class='ident'>null</span>(),
         };
+
+        <span class='comment'>// We have to handle ending \x00 byte.</span>
+        <span class='kw'>let</span> <span class='ident'>s</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>std</span>::<span class='ident'>ffi</span>::<span class='ident'>CString</span>::<span class='ident'>new</span>(<span class='ident'>s</span>).<span class='ident'>map_err</span>(<span class='op'>|</span>_<span class='op'>|</span> <span class='ident'>InputError</span>::<span class='ident'>InvalidFormat</span>));
+        <span class='kw'>let</span> <span class='ident'>fmt</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>std</span>::<span class='ident'>ffi</span>::<span class='ident'>CString</span>::<span class='ident'>new</span>(<span class='ident'>fmt</span>).<span class='ident'>map_err</span>(<span class='op'>|</span>_<span class='op'>|</span> <span class='ident'>InputError</span>::<span class='ident'>InvalidFormat</span>));
+
         <span class='kw'>let</span> <span class='ident'>ret</span> <span class='op'>=</span> <span class='kw'>unsafe</span> {
             <span class='ident'>strptime</span>(<span class='ident'>s</span>.<span class='ident'>as_ptr</span>() <span class='kw'>as</span> <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>libc</span>::<span class='ident'>c_char</span>,
                      <span class='ident'>fmt</span>.<span class='ident'>as_ptr</span>() <span class='kw'>as</span> <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>libc</span>::<span class='ident'>c_char</span>,
@@ -2936,10 +2971,17 @@
                     }
 
                     <span class='kw'>let</span> <span class='ident'>nano</span> <span class='op'>=</span> <span class='ident'>nano</span> <span class='op'>-</span> <span class='self'>self</span>.<span class='ident'>nano</span> <span class='kw'>as</span> <span class='ident'>i64</span>;
-                    <span class='kw'>let</span> <span class='ident'>sec</span> <span class='op'>=</span> <span class='ident'>nano</span> <span class='op'>/</span> <span class='number'>1_000_000_000</span> <span class='op'>+</span> <span class='number'>1</span>;
-                    <span class='kw'>let</span> <span class='ident'>nano_left</span> <span class='op'>=</span> <span class='number'>1_000_000_000</span> <span class='op'>-</span> (<span class='ident'>nano</span> <span class='op'>-</span> (<span class='ident'>sec</span> <span class='op'>-</span> <span class='number'>1</span>) <span class='op'>*</span> <span class='number'>1_000_000_000</span>);
+                    <span class='kw'>let</span> (<span class='ident'>sec</span>, <span class='ident'>nano</span>) <span class='op'>=</span> {
+                        <span class='kw'>let</span> <span class='ident'>s</span> <span class='op'>=</span> <span class='ident'>nano</span> <span class='op'>/</span> <span class='number'>1_000_000_000</span> <span class='op'>+</span> <span class='number'>1</span>;
+                        <span class='kw'>let</span> <span class='ident'>n</span> <span class='op'>=</span> <span class='ident'>s</span> <span class='op'>*</span> <span class='number'>1_000_000_000</span> <span class='op'>-</span> <span class='ident'>nano</span>;
+                        <span class='kw'>if</span> <span class='ident'>n</span> <span class='op'>==</span> <span class='number'>1_000_000_000</span> {
+                            (<span class='ident'>s</span> <span class='op'>-</span> <span class='number'>1</span>, <span class='number'>0</span>)
+                        } <span class='kw'>else</span> {
+                            (<span class='ident'>s</span>, <span class='ident'>n</span>)
+                        }
+                    };
                     <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>t</span> <span class='op'>=</span> <span class='self'>self</span> <span class='op'>+</span> <span class='ident'>Deltatime</span>(<span class='ident'>Delta</span>::<span class='ident'>Seconds</span>(<span class='op'>-</span><span class='ident'>sec</span>));
-                    <span class='ident'>t</span>.<span class='ident'>nano</span> <span class='op'>=</span> <span class='ident'>nano_left</span> <span class='kw'>as</span> <span class='ident'>i32</span>;
+                    <span class='ident'>t</span>.<span class='ident'>nano</span> <span class='op'>=</span> <span class='ident'>nano</span> <span class='kw'>as</span> <span class='ident'>i32</span>;
                     <span class='ident'>t</span>
                 } <span class='kw'>else</span> {
                     <span class='kw'>let</span> <span class='ident'>nano</span> <span class='op'>=</span> <span class='ident'>nano</span> <span class='op'>+</span> <span class='self'>self</span>.<span class='ident'>nano</span> <span class='kw'>as</span> <span class='ident'>i64</span>;
@@ -3750,10 +3792,9 @@
 
 <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>test</span>)]</span>
 <span class='kw'>mod</span> <span class='ident'>test</span> {
-    <span class='kw'>use</span> <span class='ident'>super</span>::<span class='op'>*</span>;
-    <span class='kw'>use</span> <span class='ident'>super</span>::<span class='ident'>libc</span>;
-    <span class='kw'>use</span> <span class='ident'>super</span>::<span class='ident'>nom</span>;
-    <span class='kw'>use</span> <span class='ident'>super</span>::{<span class='ident'>GenericDay</span>, <span class='ident'>Type</span>, <span class='ident'>TransRule</span>};
+    <span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>nom</span>;
+    <span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>libc</span>;
+    <span class='kw'>use</span> <span class='ident'>super</span>::{<span class='ident'>GenericDay</span>, <span class='ident'>Type</span>, <span class='ident'>TransRule</span>, <span class='ident'>Deltatime</span>, <span class='ident'>Timezone</span>, <span class='ident'>Timespec</span>};
     <span class='kw'>use</span> <span class='ident'>super</span>::{<span class='ident'>tm_to_stamp</span>, <span class='ident'>stamp_to_tm</span>, <span class='ident'>posixtz</span>};
 
     <span class='attribute'>#[<span class='ident'>test</span>]</span>
@@ -3761,7 +3802,10 @@
         <span class='kw'>let</span> <span class='ident'>utc</span> <span class='op'>=</span> <span class='ident'>Timezone</span>::<span class='ident'>utc</span>();
         <span class='kw'>for</span> <span class='kw-2'>&amp;</span>((<span class='ident'>y</span>, <span class='ident'>m</span>, <span class='ident'>d</span>, <span class='ident'>h</span>, <span class='ident'>mi</span>, <span class='ident'>s</span>, <span class='ident'>n</span>), <span class='ident'>stamp</span>) <span class='kw'>in</span> <span class='kw-2'>&amp;</span>[((<span class='number'>1970</span>, <span class='number'>1</span>, <span class='number'>1</span>, <span class='number'>0</span>, <span class='number'>0</span>, <span class='number'>0</span>, <span class='number'>0</span>), <span class='number'>0</span>),
                                                   ((<span class='number'>1970</span>, <span class='number'>1</span>, <span class='number'>1</span>, <span class='number'>1</span>, <span class='number'>0</span>, <span class='number'>0</span>, <span class='number'>0</span>), <span class='number'>3600</span>),
-                                                  ((<span class='number'>2016</span>, <span class='number'>1</span>, <span class='number'>1</span>, <span class='number'>0</span>, <span class='number'>0</span>, <span class='number'>0</span>, <span class='number'>0</span>), <span class='number'>1451606400</span>)] {
+                                                  ((<span class='number'>2016</span>, <span class='number'>1</span>, <span class='number'>1</span>, <span class='number'>0</span>, <span class='number'>0</span>, <span class='number'>0</span>, <span class='number'>0</span>), <span class='number'>1451606400</span>),
+                                                  ((<span class='number'>1969</span>, <span class='number'>12</span>, <span class='number'>31</span>, <span class='number'>23</span>, <span class='number'>59</span>, <span class='number'>59</span>, <span class='number'>999_999_999</span>), <span class='op'>-</span><span class='number'>1</span>),
+                                                  ((<span class='number'>1969</span>, <span class='number'>12</span>, <span class='number'>31</span>, <span class='number'>23</span>, <span class='number'>59</span>, <span class='number'>59</span>, <span class='number'>0</span>), <span class='op'>-</span><span class='number'>1</span>),
+                                                  ((<span class='number'>1969</span>, <span class='number'>12</span>, <span class='number'>31</span>, <span class='number'>23</span>, <span class='number'>59</span>, <span class='number'>58</span>, <span class='number'>0</span>), <span class='op'>-</span><span class='number'>2</span>)] {
             <span class='kw'>let</span> <span class='ident'>dt</span> <span class='op'>=</span> <span class='ident'>utc</span>.<span class='ident'>datetime</span>(<span class='ident'>y</span>, <span class='ident'>m</span>, <span class='ident'>d</span>, <span class='ident'>h</span>, <span class='ident'>mi</span>, <span class='ident'>s</span>, <span class='ident'>n</span>).<span class='ident'>unwrap</span>();
             <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>dt</span>.<span class='ident'>stamp</span>.<span class='ident'>sec</span>, <span class='ident'>stamp</span>);
             <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>dt</span>.<span class='ident'>stamp</span>.<span class='ident'>leaping</span>, <span class='boolval'>false</span>);
@@ -3834,6 +3878,9 @@
         <span class='kw'>let</span> <span class='ident'>t_utc</span> <span class='op'>=</span> <span class='ident'>t</span>.<span class='ident'>project</span>(<span class='kw-2'>&amp;</span><span class='ident'>utc</span>);
         <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>t_utc</span>.<span class='ident'>date</span>(), (<span class='number'>2006</span>, <span class='number'>1</span>, <span class='number'>2</span>));
         <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>t_utc</span>.<span class='ident'>time</span>(), (<span class='number'>14</span>, <span class='number'>4</span>, <span class='number'>5</span>, <span class='number'>0</span>));
+
+        <span class='ident'>paris</span>.<span class='ident'>parse</span>(<span class='string'>&quot;2006-01&quot;</span>, <span class='kw-2'>&amp;</span><span class='string'>&quot;%Y-%m-%d&quot;</span>[..<span class='number'>5</span>]).<span class='ident'>unwrap</span>();
+        <span class='ident'>paris</span>.<span class='ident'>parse</span>(<span class='kw-2'>&amp;</span><span class='string'>&quot;2006-01-02&quot;</span>[..<span class='number'>7</span>], <span class='string'>&quot;%Y-%m&quot;</span>).<span class='ident'>unwrap</span>();
     }
 
     <span class='attribute'>#[<span class='ident'>test</span>]</span>
@@ -4060,131 +4107,110 @@
     <span class='kw'>fn</span> <span class='ident'>test_add_deltatime</span>() {
         <span class='kw'>let</span> <span class='ident'>utc</span> <span class='op'>=</span> <span class='ident'>Timezone</span>::<span class='ident'>utc</span>();
 
-        <span class='comment'>// nano</span>
-        <span class='kw'>let</span> <span class='ident'>t</span> <span class='op'>=</span> <span class='ident'>utc</span>.<span class='ident'>datetime</span>(<span class='number'>2015</span>, <span class='number'>6</span>, <span class='number'>30</span>, <span class='number'>23</span>, <span class='number'>59</span>, <span class='number'>59</span>, <span class='number'>999_999_999</span>).<span class='ident'>unwrap</span>();
-        <span class='kw'>let</span> <span class='ident'>t</span> <span class='op'>=</span> <span class='ident'>t</span> <span class='op'>+</span> <span class='ident'>Deltatime</span>::<span class='ident'>nanoseconds</span>(<span class='number'>2</span>);
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>t</span>.<span class='ident'>date</span>(), (<span class='number'>2015</span>, <span class='number'>6</span>, <span class='number'>30</span>));
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>t</span>.<span class='ident'>time</span>(), (<span class='number'>23</span>, <span class='number'>59</span>, <span class='number'>60</span>, <span class='number'>1</span>));
-
-        <span class='kw'>let</span> <span class='ident'>t</span> <span class='op'>=</span> <span class='ident'>utc</span>.<span class='ident'>datetime</span>(<span class='number'>2015</span>, <span class='number'>6</span>, <span class='number'>30</span>, <span class='number'>23</span>, <span class='number'>59</span>, <span class='number'>60</span>, <span class='number'>1</span>).<span class='ident'>unwrap</span>();
-        <span class='kw'>let</span> <span class='ident'>t</span> <span class='op'>=</span> <span class='ident'>t</span> <span class='op'>+</span> <span class='ident'>Deltatime</span>::<span class='ident'>nanoseconds</span>(<span class='op'>-</span><span class='number'>2</span>);
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>t</span>.<span class='ident'>date</span>(), (<span class='number'>2015</span>, <span class='number'>6</span>, <span class='number'>30</span>));
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>t</span>.<span class='ident'>time</span>(), (<span class='number'>23</span>, <span class='number'>59</span>, <span class='number'>59</span>, <span class='number'>999_999_999</span>));
-
-        <span class='kw'>let</span> <span class='ident'>t</span> <span class='op'>=</span> <span class='ident'>utc</span>.<span class='ident'>datetime</span>(<span class='number'>2015</span>, <span class='number'>6</span>, <span class='number'>30</span>, <span class='number'>23</span>, <span class='number'>59</span>, <span class='number'>60</span>, <span class='number'>200_000_000</span>).<span class='ident'>unwrap</span>();
-        <span class='kw'>let</span> <span class='ident'>t</span> <span class='op'>=</span> <span class='ident'>t</span> <span class='op'>+</span> <span class='ident'>Deltatime</span>::<span class='ident'>nanoseconds</span>(<span class='op'>-</span><span class='number'>300_000_000</span>);
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>t</span>.<span class='ident'>date</span>(), (<span class='number'>2015</span>, <span class='number'>6</span>, <span class='number'>30</span>));
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>t</span>.<span class='ident'>time</span>(), (<span class='number'>23</span>, <span class='number'>59</span>, <span class='number'>59</span>, <span class='number'>900_000_000</span>));
-
-        <span class='kw'>let</span> <span class='ident'>t</span> <span class='op'>=</span> <span class='ident'>utc</span>.<span class='ident'>datetime</span>(<span class='number'>2015</span>, <span class='number'>6</span>, <span class='number'>30</span>, <span class='number'>23</span>, <span class='number'>59</span>, <span class='number'>60</span>, <span class='number'>1</span>).<span class='ident'>unwrap</span>();
-        <span class='kw'>let</span> <span class='ident'>t</span> <span class='op'>=</span> <span class='ident'>t</span> <span class='op'>+</span> <span class='ident'>Deltatime</span>::<span class='ident'>nanoseconds</span>(<span class='op'>-</span><span class='number'>1_000_000_002</span>);
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>t</span>.<span class='ident'>date</span>(), (<span class='number'>2015</span>, <span class='number'>6</span>, <span class='number'>30</span>));
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>t</span>.<span class='ident'>time</span>(), (<span class='number'>23</span>, <span class='number'>59</span>, <span class='number'>58</span>, <span class='number'>999_999_999</span>));
-
-        <span class='comment'>// second regular -&gt; leap</span>
-        <span class='kw'>let</span> <span class='ident'>t</span> <span class='op'>=</span> <span class='ident'>utc</span>.<span class='ident'>datetime</span>(<span class='number'>2015</span>, <span class='number'>6</span>, <span class='number'>30</span>, <span class='number'>23</span>, <span class='number'>59</span>, <span class='number'>59</span>, <span class='number'>0</span>).<span class='ident'>unwrap</span>();
-        <span class='kw'>let</span> <span class='ident'>t</span> <span class='op'>=</span> <span class='ident'>t</span> <span class='op'>+</span> <span class='ident'>Deltatime</span>::<span class='ident'>seconds</span>(<span class='number'>1</span>);
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>t</span>.<span class='ident'>date</span>(), (<span class='number'>2015</span>, <span class='number'>6</span>, <span class='number'>30</span>));
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>t</span>.<span class='ident'>time</span>(), (<span class='number'>23</span>, <span class='number'>59</span>, <span class='number'>60</span>, <span class='number'>0</span>));
-
-        <span class='kw'>let</span> <span class='ident'>t</span> <span class='op'>=</span> <span class='ident'>utc</span>.<span class='ident'>datetime</span>(<span class='number'>2015</span>, <span class='number'>6</span>, <span class='number'>30</span>, <span class='number'>23</span>, <span class='number'>59</span>, <span class='number'>60</span>, <span class='number'>0</span>).<span class='ident'>unwrap</span>();
-        <span class='kw'>let</span> <span class='ident'>t</span> <span class='op'>=</span> <span class='ident'>t</span> <span class='op'>+</span> <span class='ident'>Deltatime</span>::<span class='ident'>seconds</span>(<span class='op'>-</span><span class='number'>1</span>);
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>t</span>.<span class='ident'>date</span>(), (<span class='number'>2015</span>, <span class='number'>6</span>, <span class='number'>30</span>));
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>t</span>.<span class='ident'>time</span>(), (<span class='number'>23</span>, <span class='number'>59</span>, <span class='number'>59</span>, <span class='number'>0</span>));
-
-        <span class='comment'>// second leap -&gt; regular</span>
-        <span class='kw'>let</span> <span class='ident'>t</span> <span class='op'>=</span> <span class='ident'>utc</span>.<span class='ident'>datetime</span>(<span class='number'>2015</span>, <span class='number'>6</span>, <span class='number'>30</span>, <span class='number'>23</span>, <span class='number'>59</span>, <span class='number'>60</span>, <span class='number'>0</span>).<span class='ident'>unwrap</span>();
-        <span class='kw'>let</span> <span class='ident'>t</span> <span class='op'>=</span> <span class='ident'>t</span> <span class='op'>+</span> <span class='ident'>Deltatime</span>::<span class='ident'>seconds</span>(<span class='number'>1</span>);
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>t</span>.<span class='ident'>date</span>(), (<span class='number'>2015</span>, <span class='number'>7</span>, <span class='number'>1</span>));
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>t</span>.<span class='ident'>time</span>(), (<span class='number'>0</span>, <span class='number'>0</span>, <span class='number'>0</span>, <span class='number'>0</span>));
-
-        <span class='kw'>let</span> <span class='ident'>t</span> <span class='op'>=</span> <span class='ident'>utc</span>.<span class='ident'>datetime</span>(<span class='number'>2015</span>, <span class='number'>7</span>, <span class='number'>1</span>, <span class='number'>0</span>, <span class='number'>0</span>, <span class='number'>0</span>, <span class='number'>0</span>).<span class='ident'>unwrap</span>();
-        <span class='kw'>let</span> <span class='ident'>t</span> <span class='op'>=</span> <span class='ident'>t</span> <span class='op'>+</span> <span class='ident'>Deltatime</span>::<span class='ident'>seconds</span>(<span class='op'>-</span><span class='number'>1</span>);
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>t</span>.<span class='ident'>date</span>(), (<span class='number'>2015</span>, <span class='number'>6</span>, <span class='number'>30</span>));
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>t</span>.<span class='ident'>time</span>(), (<span class='number'>23</span>, <span class='number'>59</span>, <span class='number'>60</span>, <span class='number'>0</span>));
-
-        <span class='comment'>// second regular -&gt; regular</span>
-        <span class='kw'>let</span> <span class='ident'>t</span> <span class='op'>=</span> <span class='ident'>utc</span>.<span class='ident'>datetime</span>(<span class='number'>2015</span>, <span class='number'>6</span>, <span class='number'>30</span>, <span class='number'>23</span>, <span class='number'>59</span>, <span class='number'>59</span>, <span class='number'>0</span>).<span class='ident'>unwrap</span>();
-        <span class='kw'>let</span> <span class='ident'>t</span> <span class='op'>=</span> <span class='ident'>t</span> <span class='op'>+</span> <span class='ident'>Deltatime</span>::<span class='ident'>seconds</span>(<span class='number'>2</span>);
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>t</span>.<span class='ident'>date</span>(), (<span class='number'>2015</span>, <span class='number'>7</span>, <span class='number'>1</span>));
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>t</span>.<span class='ident'>time</span>(), (<span class='number'>0</span>, <span class='number'>0</span>, <span class='number'>0</span>, <span class='number'>0</span>));
-
-        <span class='kw'>let</span> <span class='ident'>t</span> <span class='op'>=</span> <span class='ident'>utc</span>.<span class='ident'>datetime</span>(<span class='number'>2015</span>, <span class='number'>7</span>, <span class='number'>1</span>, <span class='number'>0</span>, <span class='number'>0</span>, <span class='number'>0</span>, <span class='number'>0</span>).<span class='ident'>unwrap</span>();
-        <span class='kw'>let</span> <span class='ident'>t</span> <span class='op'>=</span> <span class='ident'>t</span> <span class='op'>+</span> <span class='ident'>Deltatime</span>::<span class='ident'>seconds</span>(<span class='op'>-</span><span class='number'>2</span>);
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>t</span>.<span class='ident'>date</span>(), (<span class='number'>2015</span>, <span class='number'>6</span>, <span class='number'>30</span>));
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>t</span>.<span class='ident'>time</span>(), (<span class='number'>23</span>, <span class='number'>59</span>, <span class='number'>59</span>, <span class='number'>0</span>));
-
-        <span class='kw'>let</span> <span class='ident'>t</span> <span class='op'>=</span> <span class='ident'>utc</span>.<span class='ident'>datetime</span>(<span class='number'>2015</span>, <span class='number'>7</span>, <span class='number'>1</span>, <span class='number'>0</span>, <span class='number'>0</span>, <span class='number'>0</span>, <span class='number'>0</span>).<span class='ident'>unwrap</span>();
-        <span class='kw'>let</span> <span class='ident'>t</span> <span class='op'>=</span> <span class='ident'>t</span> <span class='op'>+</span> <span class='ident'>Deltatime</span>::<span class='ident'>seconds</span>(<span class='number'>1</span>);
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>t</span>.<span class='ident'>date</span>(), (<span class='number'>2015</span>, <span class='number'>7</span>, <span class='number'>1</span>));
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>t</span>.<span class='ident'>time</span>(), (<span class='number'>0</span>, <span class='number'>0</span>, <span class='number'>1</span>, <span class='number'>0</span>));
-
-        <span class='kw'>let</span> <span class='ident'>t</span> <span class='op'>=</span> <span class='ident'>utc</span>.<span class='ident'>datetime</span>(<span class='number'>2015</span>, <span class='number'>7</span>, <span class='number'>1</span>, <span class='number'>0</span>, <span class='number'>0</span>, <span class='number'>1</span>, <span class='number'>0</span>).<span class='ident'>unwrap</span>();
-        <span class='kw'>let</span> <span class='ident'>t</span> <span class='op'>=</span> <span class='ident'>t</span> <span class='op'>+</span> <span class='ident'>Deltatime</span>::<span class='ident'>seconds</span>(<span class='op'>-</span><span class='number'>1</span>);
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>t</span>.<span class='ident'>date</span>(), (<span class='number'>2015</span>, <span class='number'>7</span>, <span class='number'>1</span>));
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>t</span>.<span class='ident'>time</span>(), (<span class='number'>0</span>, <span class='number'>0</span>, <span class='number'>0</span>, <span class='number'>0</span>));
-
-        <span class='kw'>let</span> <span class='ident'>t</span> <span class='op'>=</span> <span class='ident'>utc</span>.<span class='ident'>datetime</span>(<span class='number'>2015</span>, <span class='number'>6</span>, <span class='number'>30</span>, <span class='number'>23</span>, <span class='number'>59</span>, <span class='number'>59</span>, <span class='number'>0</span>).<span class='ident'>unwrap</span>();
-        <span class='kw'>let</span> <span class='ident'>t</span> <span class='op'>=</span> <span class='ident'>t</span> <span class='op'>+</span> <span class='ident'>Deltatime</span>::<span class='ident'>seconds</span>(<span class='number'>3</span>);
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>t</span>.<span class='ident'>date</span>(), (<span class='number'>2015</span>, <span class='number'>7</span>, <span class='number'>1</span>));
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>t</span>.<span class='ident'>time</span>(), (<span class='number'>0</span>, <span class='number'>0</span>, <span class='number'>1</span>, <span class='number'>0</span>));
-
-        <span class='kw'>let</span> <span class='ident'>t</span> <span class='op'>=</span> <span class='ident'>utc</span>.<span class='ident'>datetime</span>(<span class='number'>2015</span>, <span class='number'>7</span>, <span class='number'>1</span>, <span class='number'>0</span>, <span class='number'>0</span>, <span class='number'>1</span>, <span class='number'>0</span>).<span class='ident'>unwrap</span>();
-        <span class='kw'>let</span> <span class='ident'>t</span> <span class='op'>=</span> <span class='ident'>t</span> <span class='op'>+</span> <span class='ident'>Deltatime</span>::<span class='ident'>seconds</span>(<span class='op'>-</span><span class='number'>3</span>);
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>t</span>.<span class='ident'>date</span>(), (<span class='number'>2015</span>, <span class='number'>6</span>, <span class='number'>30</span>));
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>t</span>.<span class='ident'>time</span>(), (<span class='number'>23</span>, <span class='number'>59</span>, <span class='number'>59</span>, <span class='number'>0</span>));
-
-        <span class='kw'>let</span> <span class='ident'>t</span> <span class='op'>=</span> <span class='ident'>utc</span>.<span class='ident'>datetime</span>(<span class='number'>2012</span>, <span class='number'>1</span>, <span class='number'>1</span>, <span class='number'>0</span>, <span class='number'>0</span>, <span class='number'>0</span>, <span class='number'>0</span>).<span class='ident'>unwrap</span>();
-        <span class='kw'>let</span> <span class='ident'>t</span> <span class='op'>=</span> <span class='ident'>t</span> <span class='op'>+</span> <span class='ident'>Deltatime</span>::<span class='ident'>seconds</span>(<span class='number'>126230402</span>); <span class='comment'>// 4 years, 2 leaps</span>
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>t</span>.<span class='ident'>date</span>(), (<span class='number'>2016</span>, <span class='number'>1</span>, <span class='number'>1</span>));
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>t</span>.<span class='ident'>time</span>(), (<span class='number'>0</span>, <span class='number'>0</span>, <span class='number'>0</span>, <span class='number'>0</span>));
-
-        <span class='kw'>let</span> <span class='ident'>t</span> <span class='op'>=</span> <span class='ident'>utc</span>.<span class='ident'>datetime</span>(<span class='number'>2016</span>, <span class='number'>1</span>, <span class='number'>1</span>, <span class='number'>0</span>, <span class='number'>0</span>, <span class='number'>0</span>, <span class='number'>0</span>).<span class='ident'>unwrap</span>();
-        <span class='kw'>let</span> <span class='ident'>t</span> <span class='op'>=</span> <span class='ident'>t</span> <span class='op'>+</span> <span class='ident'>Deltatime</span>::<span class='ident'>seconds</span>(<span class='op'>-</span><span class='number'>126230402</span>);
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>t</span>.<span class='ident'>date</span>(), (<span class='number'>2012</span>, <span class='number'>1</span>, <span class='number'>1</span>));
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>t</span>.<span class='ident'>time</span>(), (<span class='number'>0</span>, <span class='number'>0</span>, <span class='number'>0</span>, <span class='number'>0</span>));
-
-        <span class='comment'>// second leap -&gt; leap</span>
-        <span class='kw'>let</span> <span class='ident'>t</span> <span class='op'>=</span> <span class='ident'>utc</span>.<span class='ident'>datetime</span>(<span class='number'>2015</span>, <span class='number'>6</span>, <span class='number'>30</span>, <span class='number'>23</span>, <span class='number'>59</span>, <span class='number'>60</span>, <span class='number'>0</span>).<span class='ident'>unwrap</span>();
-        <span class='kw'>let</span> <span class='ident'>t</span> <span class='op'>=</span> <span class='ident'>t</span> <span class='op'>+</span> <span class='ident'>Deltatime</span>::<span class='ident'>seconds</span>(<span class='number'>0</span>);
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>t</span>.<span class='ident'>date</span>(), (<span class='number'>2015</span>, <span class='number'>6</span>, <span class='number'>30</span>));
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>t</span>.<span class='ident'>time</span>(), (<span class='number'>23</span>, <span class='number'>59</span>, <span class='number'>60</span>, <span class='number'>0</span>));
-
-        <span class='kw'>let</span> <span class='ident'>t</span> <span class='op'>=</span> <span class='ident'>utc</span>.<span class='ident'>datetime</span>(<span class='number'>2012</span>, <span class='number'>6</span>, <span class='number'>30</span>, <span class='number'>23</span>, <span class='number'>59</span>, <span class='number'>60</span>, <span class='number'>0</span>).<span class='ident'>unwrap</span>();
-        <span class='kw'>let</span> <span class='ident'>t</span> <span class='op'>=</span> <span class='ident'>t</span> <span class='op'>+</span> <span class='ident'>Deltatime</span>::<span class='ident'>seconds</span>(<span class='number'>94608001</span>);
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>t</span>.<span class='ident'>date</span>(), (<span class='number'>2015</span>, <span class='number'>6</span>, <span class='number'>30</span>));
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>t</span>.<span class='ident'>time</span>(), (<span class='number'>23</span>, <span class='number'>59</span>, <span class='number'>60</span>, <span class='number'>0</span>));
-
-        <span class='kw'>let</span> <span class='ident'>t</span> <span class='op'>=</span> <span class='ident'>utc</span>.<span class='ident'>datetime</span>(<span class='number'>2015</span>, <span class='number'>6</span>, <span class='number'>30</span>, <span class='number'>23</span>, <span class='number'>59</span>, <span class='number'>60</span>, <span class='number'>0</span>).<span class='ident'>unwrap</span>();
-        <span class='kw'>let</span> <span class='ident'>t</span> <span class='op'>=</span> <span class='ident'>t</span> <span class='op'>+</span> <span class='ident'>Deltatime</span>::<span class='ident'>seconds</span>(<span class='op'>-</span><span class='number'>94608001</span>);
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>t</span>.<span class='ident'>date</span>(), (<span class='number'>2012</span>, <span class='number'>6</span>, <span class='number'>30</span>));
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>t</span>.<span class='ident'>time</span>(), (<span class='number'>23</span>, <span class='number'>59</span>, <span class='number'>60</span>, <span class='number'>0</span>));
-
-        <span class='comment'>// days</span>
-        <span class='kw'>let</span> <span class='ident'>t</span> <span class='op'>=</span> <span class='ident'>utc</span>.<span class='ident'>datetime</span>(<span class='number'>2016</span>, <span class='number'>2</span>, <span class='number'>29</span>, <span class='number'>0</span>, <span class='number'>0</span>, <span class='number'>0</span>, <span class='number'>0</span>).<span class='ident'>unwrap</span>();
-        <span class='kw'>let</span> <span class='ident'>t</span> <span class='op'>=</span> <span class='ident'>t</span> <span class='op'>+</span> <span class='ident'>Deltatime</span>::<span class='ident'>days</span>(<span class='number'>1</span>);
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>t</span>.<span class='ident'>date</span>(), (<span class='number'>2016</span>, <span class='number'>3</span>, <span class='number'>1</span>));
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>t</span>.<span class='ident'>time</span>(), (<span class='number'>0</span>, <span class='number'>0</span>, <span class='number'>0</span>, <span class='number'>0</span>));
-
-        <span class='kw'>let</span> <span class='ident'>t</span> <span class='op'>=</span> <span class='ident'>utc</span>.<span class='ident'>datetime</span>(<span class='number'>2016</span>, <span class='number'>3</span>, <span class='number'>1</span>, <span class='number'>0</span>, <span class='number'>0</span>, <span class='number'>0</span>, <span class='number'>0</span>).<span class='ident'>unwrap</span>();
-        <span class='kw'>let</span> <span class='ident'>t</span> <span class='op'>=</span> <span class='ident'>t</span> <span class='op'>+</span> <span class='ident'>Deltatime</span>::<span class='ident'>days</span>(<span class='op'>-</span><span class='number'>1</span>);
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>t</span>.<span class='ident'>date</span>(), (<span class='number'>2016</span>, <span class='number'>2</span>, <span class='number'>29</span>));
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>t</span>.<span class='ident'>time</span>(), (<span class='number'>0</span>, <span class='number'>0</span>, <span class='number'>0</span>, <span class='number'>0</span>));
-
-        <span class='kw'>let</span> <span class='ident'>t</span> <span class='op'>=</span> <span class='ident'>utc</span>.<span class='ident'>datetime</span>(<span class='number'>2016</span>, <span class='number'>1</span>, <span class='number'>1</span>, <span class='number'>0</span>, <span class='number'>0</span>, <span class='number'>0</span>, <span class='number'>0</span>).<span class='ident'>unwrap</span>();
-        <span class='kw'>let</span> <span class='ident'>t</span> <span class='op'>=</span> <span class='ident'>t</span> <span class='op'>+</span> <span class='ident'>Deltatime</span>::<span class='ident'>days</span>(<span class='number'>366</span>);
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>t</span>.<span class='ident'>date</span>(), (<span class='number'>2017</span>, <span class='number'>1</span>, <span class='number'>1</span>));
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>t</span>.<span class='ident'>time</span>(), (<span class='number'>0</span>, <span class='number'>0</span>, <span class='number'>0</span>, <span class='number'>0</span>));
-
-        <span class='kw'>let</span> <span class='ident'>t</span> <span class='op'>=</span> <span class='ident'>utc</span>.<span class='ident'>datetime</span>(<span class='number'>2017</span>, <span class='number'>1</span>, <span class='number'>1</span>, <span class='number'>0</span>, <span class='number'>0</span>, <span class='number'>0</span>, <span class='number'>0</span>).<span class='ident'>unwrap</span>();
-        <span class='kw'>let</span> <span class='ident'>t</span> <span class='op'>=</span> <span class='ident'>t</span> <span class='op'>+</span> <span class='ident'>Deltatime</span>::<span class='ident'>days</span>(<span class='op'>-</span><span class='number'>366</span>);
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>t</span>.<span class='ident'>date</span>(), (<span class='number'>2016</span>, <span class='number'>1</span>, <span class='number'>1</span>));
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>t</span>.<span class='ident'>time</span>(), (<span class='number'>0</span>, <span class='number'>0</span>, <span class='number'>0</span>, <span class='number'>0</span>));
-
-        <span class='kw'>let</span> <span class='ident'>t</span> <span class='op'>=</span> <span class='ident'>utc</span>.<span class='ident'>datetime</span>(<span class='number'>2015</span>, <span class='number'>6</span>, <span class='number'>30</span>, <span class='number'>23</span>, <span class='number'>59</span>, <span class='number'>60</span>, <span class='number'>0</span>).<span class='ident'>unwrap</span>();
-        <span class='kw'>let</span> <span class='ident'>t</span> <span class='op'>=</span> <span class='ident'>t</span> <span class='op'>+</span> <span class='ident'>Deltatime</span>::<span class='ident'>days</span>(<span class='number'>1</span>);
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>t</span>.<span class='ident'>date</span>(), (<span class='number'>2015</span>, <span class='number'>7</span>, <span class='number'>2</span>));
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>t</span>.<span class='ident'>time</span>(), (<span class='number'>0</span>, <span class='number'>0</span>, <span class='number'>0</span>, <span class='number'>0</span>));
+        <span class='kw'>for</span> <span class='kw-2'>&amp;</span>(<span class='ident'>dt</span>, <span class='ident'>delta</span>, <span class='ident'>res</span>) <span class='kw'>in</span> <span class='kw-2'>&amp;</span>[<span class='comment'>// nano</span>
+                                   ((<span class='number'>2015</span>, <span class='number'>6</span>, <span class='number'>30</span>, <span class='number'>23</span>, <span class='number'>59</span>, <span class='number'>59</span>, <span class='number'>999_999_999</span>),
+                                    <span class='ident'>Deltatime</span>::<span class='ident'>nanoseconds</span>(<span class='number'>2</span>),
+                                    (<span class='number'>2015</span>, <span class='number'>6</span>, <span class='number'>30</span>, <span class='number'>23</span>, <span class='number'>59</span>, <span class='number'>60</span>, <span class='number'>1</span>)),
+                                   ((<span class='number'>2015</span>, <span class='number'>6</span>, <span class='number'>30</span>, <span class='number'>23</span>, <span class='number'>59</span>, <span class='number'>60</span>, <span class='number'>1</span>),
+                                    <span class='ident'>Deltatime</span>::<span class='ident'>nanoseconds</span>(<span class='op'>-</span><span class='number'>2</span>),
+                                    (<span class='number'>2015</span>, <span class='number'>6</span>, <span class='number'>30</span>, <span class='number'>23</span>, <span class='number'>59</span>, <span class='number'>59</span>, <span class='number'>999_999_999</span>)),
+                                   ((<span class='number'>2015</span>, <span class='number'>6</span>, <span class='number'>30</span>, <span class='number'>23</span>, <span class='number'>59</span>, <span class='number'>60</span>, <span class='number'>200_000_000</span>),
+                                    <span class='ident'>Deltatime</span>::<span class='ident'>nanoseconds</span>(<span class='op'>-</span><span class='number'>300_000_000</span>),
+                                    (<span class='number'>2015</span>, <span class='number'>6</span>, <span class='number'>30</span>, <span class='number'>23</span>, <span class='number'>59</span>, <span class='number'>59</span>, <span class='number'>900_000_000</span>)),
+                                   ((<span class='number'>2015</span>, <span class='number'>6</span>, <span class='number'>30</span>, <span class='number'>23</span>, <span class='number'>59</span>, <span class='number'>60</span>, <span class='number'>1</span>),
+                                    <span class='ident'>Deltatime</span>::<span class='ident'>nanoseconds</span>(<span class='op'>-</span><span class='number'>1_000_000_002</span>),
+                                    (<span class='number'>2015</span>, <span class='number'>6</span>, <span class='number'>30</span>, <span class='number'>23</span>, <span class='number'>59</span>, <span class='number'>58</span>, <span class='number'>999_999_999</span>)),
+                                   ((<span class='number'>2016</span>, <span class='number'>1</span>, <span class='number'>1</span>, <span class='number'>0</span>, <span class='number'>0</span>, <span class='number'>0</span>, <span class='number'>0</span>),
+                                    <span class='ident'>Deltatime</span>::<span class='ident'>nanoseconds</span>(<span class='number'>1_500_000_000</span>),
+                                    (<span class='number'>2016</span>, <span class='number'>1</span>, <span class='number'>1</span>, <span class='number'>0</span>, <span class='number'>0</span>, <span class='number'>1</span>, <span class='number'>500_000_000</span>)),
+                                   ((<span class='number'>2016</span>, <span class='number'>1</span>, <span class='number'>1</span>, <span class='number'>0</span>, <span class='number'>0</span>, <span class='number'>1</span>, <span class='number'>500_000_000</span>),
+                                    <span class='ident'>Deltatime</span>::<span class='ident'>nanoseconds</span>(<span class='op'>-</span><span class='number'>1_500_000_001</span>),
+                                    (<span class='number'>2015</span>, <span class='number'>12</span>, <span class='number'>31</span>, <span class='number'>23</span>, <span class='number'>59</span>, <span class='number'>59</span>, <span class='number'>999_999_999</span>)),
+                                   ((<span class='number'>2016</span>, <span class='number'>1</span>, <span class='number'>1</span>, <span class='number'>0</span>, <span class='number'>0</span>, <span class='number'>1</span>, <span class='number'>500_000_000</span>),
+                                    <span class='ident'>Deltatime</span>::<span class='ident'>nanoseconds</span>(<span class='op'>-</span><span class='number'>1_500_000_000</span>),
+                                    (<span class='number'>2016</span>, <span class='number'>1</span>, <span class='number'>1</span>, <span class='number'>0</span>, <span class='number'>0</span>, <span class='number'>0</span>, <span class='number'>0</span>)),
+                                   ((<span class='number'>2016</span>, <span class='number'>1</span>, <span class='number'>1</span>, <span class='number'>0</span>, <span class='number'>0</span>, <span class='number'>0</span>, <span class='number'>500_000_000</span>),
+                                    <span class='ident'>Deltatime</span>::<span class='ident'>nanoseconds</span>(<span class='number'>500_000_001</span>),
+                                    (<span class='number'>2016</span>, <span class='number'>1</span>, <span class='number'>1</span>, <span class='number'>0</span>, <span class='number'>0</span>, <span class='number'>1</span>, <span class='number'>1</span>)),
+                                   ((<span class='number'>2016</span>, <span class='number'>1</span>, <span class='number'>1</span>, <span class='number'>0</span>, <span class='number'>0</span>, <span class='number'>1</span>, <span class='number'>1</span>),
+                                    <span class='ident'>Deltatime</span>::<span class='ident'>nanoseconds</span>(<span class='op'>-</span><span class='number'>500_000_001</span>),
+                                    (<span class='number'>2016</span>, <span class='number'>1</span>, <span class='number'>1</span>, <span class='number'>0</span>, <span class='number'>0</span>, <span class='number'>0</span>, <span class='number'>500_000_000</span>)),
+                                   <span class='comment'>// regular -&gt; leap</span>
+                                   ((<span class='number'>2015</span>, <span class='number'>6</span>, <span class='number'>30</span>, <span class='number'>23</span>, <span class='number'>59</span>, <span class='number'>59</span>, <span class='number'>0</span>),
+                                    <span class='ident'>Deltatime</span>::<span class='ident'>seconds</span>(<span class='number'>1</span>),
+                                    (<span class='number'>2015</span>, <span class='number'>6</span>, <span class='number'>30</span>, <span class='number'>23</span>, <span class='number'>59</span>, <span class='number'>60</span>, <span class='number'>0</span>)),
+                                   ((<span class='number'>2015</span>, <span class='number'>6</span>, <span class='number'>30</span>, <span class='number'>23</span>, <span class='number'>59</span>, <span class='number'>60</span>, <span class='number'>0</span>),
+                                    <span class='ident'>Deltatime</span>::<span class='ident'>seconds</span>(<span class='op'>-</span><span class='number'>1</span>),
+                                    (<span class='number'>2015</span>, <span class='number'>6</span>, <span class='number'>30</span>, <span class='number'>23</span>, <span class='number'>59</span>, <span class='number'>59</span>, <span class='number'>0</span>)),
+                                   <span class='comment'>// leap -&gt; regular</span>
+                                   ((<span class='number'>2015</span>, <span class='number'>6</span>, <span class='number'>30</span>, <span class='number'>23</span>, <span class='number'>59</span>, <span class='number'>60</span>, <span class='number'>0</span>),
+                                    <span class='ident'>Deltatime</span>::<span class='ident'>seconds</span>(<span class='number'>1</span>),
+                                    (<span class='number'>2015</span>, <span class='number'>7</span>, <span class='number'>1</span>, <span class='number'>0</span>, <span class='number'>0</span>, <span class='number'>0</span>, <span class='number'>0</span>)),
+                                   ((<span class='number'>2015</span>, <span class='number'>7</span>, <span class='number'>1</span>, <span class='number'>0</span>, <span class='number'>0</span>, <span class='number'>0</span>, <span class='number'>0</span>),
+                                    <span class='ident'>Deltatime</span>::<span class='ident'>seconds</span>(<span class='op'>-</span><span class='number'>1</span>),
+                                    (<span class='number'>2015</span>, <span class='number'>6</span>, <span class='number'>30</span>, <span class='number'>23</span>, <span class='number'>59</span>, <span class='number'>60</span>, <span class='number'>0</span>)),
+                                   <span class='comment'>// regular -&gt; regular</span>
+                                   ((<span class='number'>2015</span>, <span class='number'>6</span>, <span class='number'>30</span>, <span class='number'>23</span>, <span class='number'>59</span>, <span class='number'>59</span>, <span class='number'>0</span>),
+                                    <span class='ident'>Deltatime</span>::<span class='ident'>seconds</span>(<span class='number'>2</span>),
+                                    (<span class='number'>2015</span>, <span class='number'>7</span>, <span class='number'>1</span>, <span class='number'>0</span>, <span class='number'>0</span>, <span class='number'>0</span>, <span class='number'>0</span>)),
+                                   ((<span class='number'>2015</span>, <span class='number'>7</span>, <span class='number'>1</span>, <span class='number'>0</span>, <span class='number'>0</span>, <span class='number'>0</span>, <span class='number'>0</span>),
+                                    <span class='ident'>Deltatime</span>::<span class='ident'>seconds</span>(<span class='op'>-</span><span class='number'>2</span>),
+                                    (<span class='number'>2015</span>, <span class='number'>6</span>, <span class='number'>30</span>, <span class='number'>23</span>, <span class='number'>59</span>, <span class='number'>59</span>, <span class='number'>0</span>)),
+                                   ((<span class='number'>2015</span>, <span class='number'>7</span>, <span class='number'>1</span>, <span class='number'>0</span>, <span class='number'>0</span>, <span class='number'>0</span>, <span class='number'>0</span>),
+                                    <span class='ident'>Deltatime</span>::<span class='ident'>seconds</span>(<span class='number'>1</span>),
+                                    (<span class='number'>2015</span>, <span class='number'>7</span>, <span class='number'>1</span>, <span class='number'>0</span>, <span class='number'>0</span>, <span class='number'>1</span>, <span class='number'>0</span>)),
+                                   ((<span class='number'>2015</span>, <span class='number'>7</span>, <span class='number'>1</span>, <span class='number'>0</span>, <span class='number'>0</span>, <span class='number'>1</span>, <span class='number'>0</span>),
+                                    <span class='ident'>Deltatime</span>::<span class='ident'>seconds</span>(<span class='op'>-</span><span class='number'>1</span>),
+                                    (<span class='number'>2015</span>, <span class='number'>7</span>, <span class='number'>1</span>, <span class='number'>0</span>, <span class='number'>0</span>, <span class='number'>0</span>, <span class='number'>0</span>)),
+                                   ((<span class='number'>2015</span>, <span class='number'>6</span>, <span class='number'>30</span>, <span class='number'>23</span>, <span class='number'>59</span>, <span class='number'>59</span>, <span class='number'>0</span>),
+                                    <span class='ident'>Deltatime</span>::<span class='ident'>seconds</span>(<span class='number'>3</span>),
+                                    (<span class='number'>2015</span>, <span class='number'>7</span>, <span class='number'>1</span>, <span class='number'>0</span>, <span class='number'>0</span>, <span class='number'>1</span>, <span class='number'>0</span>)),
+                                   ((<span class='number'>2015</span>, <span class='number'>7</span>, <span class='number'>1</span>, <span class='number'>0</span>, <span class='number'>0</span>, <span class='number'>1</span>, <span class='number'>0</span>),
+                                    <span class='ident'>Deltatime</span>::<span class='ident'>seconds</span>(<span class='op'>-</span><span class='number'>3</span>),
+                                    (<span class='number'>2015</span>, <span class='number'>6</span>, <span class='number'>30</span>, <span class='number'>23</span>, <span class='number'>59</span>, <span class='number'>59</span>, <span class='number'>0</span>)),
+                                   ((<span class='number'>2012</span>, <span class='number'>1</span>, <span class='number'>1</span>, <span class='number'>0</span>, <span class='number'>0</span>, <span class='number'>0</span>, <span class='number'>0</span>),
+                                    <span class='ident'>Deltatime</span>::<span class='ident'>seconds</span>(<span class='number'>126230402</span>),
+                                    (<span class='number'>2016</span>, <span class='number'>1</span>, <span class='number'>1</span>, <span class='number'>0</span>, <span class='number'>0</span>, <span class='number'>0</span>, <span class='number'>0</span>)), <span class='comment'>// 4 years, 2 leaps</span>
+                                   ((<span class='number'>2016</span>, <span class='number'>1</span>, <span class='number'>1</span>, <span class='number'>0</span>, <span class='number'>0</span>, <span class='number'>0</span>, <span class='number'>0</span>),
+                                    <span class='ident'>Deltatime</span>::<span class='ident'>seconds</span>(<span class='op'>-</span><span class='number'>126230402</span>),
+                                    (<span class='number'>2012</span>, <span class='number'>1</span>, <span class='number'>1</span>, <span class='number'>0</span>, <span class='number'>0</span>, <span class='number'>0</span>, <span class='number'>0</span>)),
+                                   ((<span class='number'>1969</span>, <span class='number'>12</span>, <span class='number'>31</span>, <span class='number'>23</span>, <span class='number'>59</span>, <span class='number'>59</span>, <span class='number'>0</span>),
+                                    <span class='ident'>Deltatime</span>::<span class='ident'>seconds</span>(<span class='number'>1</span>),
+                                    (<span class='number'>1970</span>, <span class='number'>1</span>, <span class='number'>1</span>, <span class='number'>0</span>, <span class='number'>0</span>, <span class='number'>0</span>, <span class='number'>0</span>)),
+                                   ((<span class='number'>1970</span>, <span class='number'>1</span>, <span class='number'>1</span>, <span class='number'>0</span>, <span class='number'>0</span>, <span class='number'>0</span>, <span class='number'>0</span>),
+                                    <span class='ident'>Deltatime</span>::<span class='ident'>seconds</span>(<span class='op'>-</span><span class='number'>1</span>),
+                                    (<span class='number'>1969</span>, <span class='number'>12</span>, <span class='number'>31</span>, <span class='number'>23</span>, <span class='number'>59</span>, <span class='number'>59</span>, <span class='number'>0</span>)),
+                                   <span class='comment'>// leap -&gt; leap</span>
+                                   ((<span class='number'>2015</span>, <span class='number'>6</span>, <span class='number'>30</span>, <span class='number'>23</span>, <span class='number'>59</span>, <span class='number'>60</span>, <span class='number'>0</span>),
+                                    <span class='ident'>Deltatime</span>::<span class='ident'>seconds</span>(<span class='number'>0</span>),
+                                    (<span class='number'>2015</span>, <span class='number'>6</span>, <span class='number'>30</span>, <span class='number'>23</span>, <span class='number'>59</span>, <span class='number'>60</span>, <span class='number'>0</span>)),
+                                   ((<span class='number'>2012</span>, <span class='number'>6</span>, <span class='number'>30</span>, <span class='number'>23</span>, <span class='number'>59</span>, <span class='number'>60</span>, <span class='number'>0</span>),
+                                    <span class='ident'>Deltatime</span>::<span class='ident'>seconds</span>(<span class='number'>94608001</span>),
+                                    (<span class='number'>2015</span>, <span class='number'>6</span>, <span class='number'>30</span>, <span class='number'>23</span>, <span class='number'>59</span>, <span class='number'>60</span>, <span class='number'>0</span>)),
+                                   ((<span class='number'>2015</span>, <span class='number'>6</span>, <span class='number'>30</span>, <span class='number'>23</span>, <span class='number'>59</span>, <span class='number'>60</span>, <span class='number'>0</span>),
+                                    <span class='ident'>Deltatime</span>::<span class='ident'>seconds</span>(<span class='op'>-</span><span class='number'>94608001</span>),
+                                    (<span class='number'>2012</span>, <span class='number'>6</span>, <span class='number'>30</span>, <span class='number'>23</span>, <span class='number'>59</span>, <span class='number'>60</span>, <span class='number'>0</span>)),
+                                   <span class='comment'>// days</span>
+                                   ((<span class='number'>2016</span>, <span class='number'>2</span>, <span class='number'>29</span>, <span class='number'>0</span>, <span class='number'>0</span>, <span class='number'>0</span>, <span class='number'>0</span>),
+                                    <span class='ident'>Deltatime</span>::<span class='ident'>days</span>(<span class='number'>1</span>),
+                                    (<span class='number'>2016</span>, <span class='number'>3</span>, <span class='number'>1</span>, <span class='number'>0</span>, <span class='number'>0</span>, <span class='number'>0</span>, <span class='number'>0</span>)),
+                                   ((<span class='number'>2016</span>, <span class='number'>3</span>, <span class='number'>1</span>, <span class='number'>0</span>, <span class='number'>0</span>, <span class='number'>0</span>, <span class='number'>0</span>),
+                                    <span class='ident'>Deltatime</span>::<span class='ident'>days</span>(<span class='op'>-</span><span class='number'>1</span>),
+                                    (<span class='number'>2016</span>, <span class='number'>2</span>, <span class='number'>29</span>, <span class='number'>0</span>, <span class='number'>0</span>, <span class='number'>0</span>, <span class='number'>0</span>)),
+                                   ((<span class='number'>2016</span>, <span class='number'>1</span>, <span class='number'>1</span>, <span class='number'>0</span>, <span class='number'>0</span>, <span class='number'>0</span>, <span class='number'>0</span>),
+                                    <span class='ident'>Deltatime</span>::<span class='ident'>days</span>(<span class='number'>366</span>),
+                                    (<span class='number'>2017</span>, <span class='number'>1</span>, <span class='number'>1</span>, <span class='number'>0</span>, <span class='number'>0</span>, <span class='number'>0</span>, <span class='number'>0</span>)),
+                                   ((<span class='number'>2017</span>, <span class='number'>1</span>, <span class='number'>1</span>, <span class='number'>0</span>, <span class='number'>0</span>, <span class='number'>0</span>, <span class='number'>0</span>),
+                                    <span class='ident'>Deltatime</span>::<span class='ident'>days</span>(<span class='op'>-</span><span class='number'>366</span>),
+                                    (<span class='number'>2016</span>, <span class='number'>1</span>, <span class='number'>1</span>, <span class='number'>0</span>, <span class='number'>0</span>, <span class='number'>0</span>, <span class='number'>0</span>)),
+                                   ((<span class='number'>2015</span>, <span class='number'>6</span>, <span class='number'>30</span>, <span class='number'>23</span>, <span class='number'>59</span>, <span class='number'>60</span>, <span class='number'>0</span>),
+                                    <span class='ident'>Deltatime</span>::<span class='ident'>days</span>(<span class='number'>1</span>),
+                                    (<span class='number'>2015</span>, <span class='number'>7</span>, <span class='number'>2</span>, <span class='number'>0</span>, <span class='number'>0</span>, <span class='number'>0</span>, <span class='number'>0</span>))] {
+            <span class='kw'>let</span> <span class='ident'>t</span> <span class='op'>=</span> <span class='ident'>utc</span>.<span class='ident'>datetime</span>(<span class='ident'>dt</span>.<span class='number'>0</span>, <span class='ident'>dt</span>.<span class='number'>1</span>, <span class='ident'>dt</span>.<span class='number'>2</span>, <span class='ident'>dt</span>.<span class='number'>3</span>, <span class='ident'>dt</span>.<span class='number'>4</span>, <span class='ident'>dt</span>.<span class='number'>5</span>, <span class='ident'>dt</span>.<span class='number'>6</span>).<span class='ident'>unwrap</span>();
+            <span class='kw'>let</span> <span class='ident'>t</span> <span class='op'>=</span> <span class='ident'>t</span> <span class='op'>+</span> <span class='ident'>delta</span>;
+            <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>t</span>.<span class='ident'>date</span>(), (<span class='ident'>res</span>.<span class='number'>0</span>, <span class='ident'>res</span>.<span class='number'>1</span>, <span class='ident'>res</span>.<span class='number'>2</span>));
+            <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>t</span>.<span class='ident'>time</span>(), (<span class='ident'>res</span>.<span class='number'>3</span>, <span class='ident'>res</span>.<span class='number'>4</span>, <span class='ident'>res</span>.<span class='number'>5</span>, <span class='ident'>res</span>.<span class='number'>6</span>));
+        }
     }
 
     <span class='attribute'>#[<span class='ident'>test</span>]</span>

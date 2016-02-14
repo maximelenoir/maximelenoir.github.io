@@ -46,15 +46,17 @@
             <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                 [<span class='inner'>&#x2212;</span>]
             </a>
-        </span><a id='src-1634' class='srclink' href='../src/nom/macros.rs.html#655-662' title='goto source code'>[src]</a></span></h1>
+        </span><a id='src-1682' class='srclink' href='../src/nom/macros.rs.html#667-674' title='goto source code'>[src]</a></span></h1>
 <pre class='rust macro'>
 <span class='macro'>macro_rules</span><span class='macro'>!</span> <span class='ident'>chain</span> {
     (<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>i</span>:<span class='ident'>expr</span>, $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>rest</span>:<span class='ident'>tt</span>)<span class='op'>*</span>) <span class='op'>=&gt;</span> { ... };
 }</pre>
 <div class='docblock'><p><code>chain!(I-&gt;IResult&lt;I,A&gt; ~ I-&gt;IResult&lt;I,B&gt; ~ ... I-&gt;IResult&lt;I,X&gt; , || { return O } ) =&gt; I -&gt; IResult&lt;I, O&gt;</code>
-chains parsers and assemble the results through a closure
-the input type I must implement nom::InputLength
-this combinator will count how much data is consumed by every child parser and take it into account if
+chains parsers and assemble the results through a closure</p>
+
+<p>The input type <code>I</code> must implement <code>nom::InputLength</code>.</p>
+
+<p>This combinator will count how much data is consumed by every child parser and take it into account if
 there is not enough data</p>
 <pre class='rust rust-example-rendered'>
 <span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>PartialEq</span>,<span class='ident'>Eq</span>,<span class='ident'>Debug</span>)]</span>
