@@ -2212,6 +2212,25 @@
 <span id="2169">2169</span>
 <span id="2170">2170</span>
 <span id="2171">2171</span>
+<span id="2172">2172</span>
+<span id="2173">2173</span>
+<span id="2174">2174</span>
+<span id="2175">2175</span>
+<span id="2176">2176</span>
+<span id="2177">2177</span>
+<span id="2178">2178</span>
+<span id="2179">2179</span>
+<span id="2180">2180</span>
+<span id="2181">2181</span>
+<span id="2182">2182</span>
+<span id="2183">2183</span>
+<span id="2184">2184</span>
+<span id="2185">2185</span>
+<span id="2186">2186</span>
+<span id="2187">2187</span>
+<span id="2188">2188</span>
+<span id="2189">2189</span>
+<span id="2190">2190</span>
 </pre><pre class='rust '>
 <span class='doccomment'>//! `hourglass` provides support for timezone, datetime arithmetic and take care</span>
 <span class='doccomment'>//! of subtleties related to time handling, like leap seconds.</span>
@@ -2232,6 +2251,8 @@
 <span class='doccomment'>//! ```</span>
 <span class='doccomment'>//!</span>
 <span class='doccomment'>//! ## Overview</span>
+<span class='doccomment'>//!</span>
+<span class='doccomment'>//! ### Timezone</span>
 <span class='doccomment'>//!</span>
 <span class='doccomment'>//! Because a datetime without a timezone is ambiguous and error-prone, `hourglass`</span>
 <span class='doccomment'>//! only exposes a `Datetime` that is timezone-aware. The creation of a `Timezone`</span>
@@ -2263,6 +2284,8 @@
 <span class='doccomment'>//! assert_eq!(t_utc.date(), (2015, 12, 24));</span>
 <span class='doccomment'>//! assert_eq!(t_utc.time(), (23, 0, 0, 0));</span>
 <span class='doccomment'>//! ```</span>
+<span class='doccomment'>//!</span>
+<span class='doccomment'>//! ### Arithmetic</span>
 <span class='doccomment'>//!</span>
 <span class='doccomment'>//! `Datetime` arithmetic is performed with a `Deltatime`. Several granularities</span>
 <span class='doccomment'>//! are available when handling `Deltatime` and will yield different results:</span>
@@ -2296,7 +2319,9 @@
 <span class='doccomment'>//! assert_eq!(t1 - t0, Deltatime::seconds(86401));</span>
 <span class='doccomment'>//! ```</span>
 <span class='doccomment'>//!</span>
-<span class='doccomment'>//! `hourglass` also provides a convenient iterator for scheduling a loop</span>
+<span class='doccomment'>//! ### Iterators</span>
+<span class='doccomment'>//!</span>
+<span class='doccomment'>//! `hourglass` also provides the `Every` iterator for scheduling a loop</span>
 <span class='doccomment'>//! body execution at regular time interval:</span>
 <span class='doccomment'>//!</span>
 <span class='doccomment'>//! ```rust</span>
@@ -2309,6 +2334,19 @@
 <span class='doccomment'>//!     println!(&quot;it is {} in Paris&quot;, t.to_datetime(&amp;paris).format(&quot;%H:%M:%S&quot;).unwrap());</span>
 <span class='doccomment'>//! }</span>
 <span class='doccomment'>//! ```</span>
+<span class='doccomment'>//!</span>
+<span class='doccomment'>//! The `Range` iterator can be used to iterate over a range of `Timespec`:</span>
+<span class='doccomment'>//!</span>
+<span class='doccomment'>//! ```rust</span>
+<span class='doccomment'>//! use hourglass::{Deltatime, Timespec, Range};</span>
+<span class='doccomment'>//!</span>
+<span class='doccomment'>//! let now = Timespec::now();</span>
+<span class='doccomment'>//! let then = now + Deltatime::minutes(1);</span>
+<span class='doccomment'>//!</span>
+<span class='doccomment'>//! for t in Range::new(now, then, Deltatime::seconds(1)) {</span>
+<span class='doccomment'>//!     println!(&quot;tick {}&quot;, t.seconds());</span>
+<span class='doccomment'>//! }</span>
+<span class='doccomment'>//! ```</span>
 
 <span class='attribute'>#[<span class='ident'>macro_use</span>]</span>
 <span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>nom</span>;
@@ -2317,7 +2355,7 @@
 <span class='kw'>mod</span> <span class='ident'>parse</span>;
 <span class='kw'>mod</span> <span class='ident'>iter</span>;
 
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>iter</span>::<span class='ident'>Every</span>;
+<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>iter</span>::{<span class='ident'>Every</span>, <span class='ident'>Range</span>};
 
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>rc</span>::<span class='ident'>Rc</span>;
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>io</span>;
