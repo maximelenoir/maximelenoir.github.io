@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+html lang=en
+	head
+		meta charset="UTF-8"
+		meta name="viewport" content="width=device-width, initial-scale=1.0"
+		title
+			Maxime Lenoir
+		link rel="stylesheet" href="style.css"
+
+body
+	header
+		img src="img/profile_300x300.jpg"
+		div .title
+			h1 .name
+				Maxime Lenoir
+			h2 .subtitle
+				Software engineer
+		a .linkedin href="https://www.linkedin.com/in/maxime-lenoir-software-engineer"
+			svg width="24" height="24" viewBox="0 0 34 34"
+				g
+					path d="M34,2.5v29A2.5,2.5,0,0,1,31.5,34H2.5A2.5,2.5,0,0,1,0,31.5V2.5A2.5,2.5,0,0,1,2.5,0h29A2.5,2.5,0,0,1,34,2.5ZM10,13H5V29h5Zm.45-5.5A2.88,2.88,0,0,0,7.59,4.6H7.5a2.9,2.9,0,0,0,0,5.8h0a2.88,2.88,0,0,0,2.95-2.81ZM29,19.28c0-4.81-3.06-6.68-6.1-6.68a5.7,5.7,0,0,0-5.06,2.58H17.7V13H13V29h5V20.49a3.32,3.32,0,0,1,3-3.58h.19c1.59,0,2.77,1,2.77,3.52V29h5Z" fill="currentColor"
+	section .sections
+		h3
+			Work Experience
+		div .item
+			div .title
+				Software engineer
+			div .date
+				2022 - present
+			div .subtitle
+				Squarepoint, Paris, France
+			div .bullets
+				ul
+					li
+						Systematic strategy execution framework
+						ul
+							li
+								Improve robustness, testability and introspection of the framework
+							li
+								Backport Rust's best-practice to C++
+		div .item
+			div .title
+				Software engineer
+			div .date
+				2013 - 2022
+			div .subtitle
+				BNP Paribas, Paris, France
+			div .bullets
+				ul
+					li
+						Project owner of a pre-trade instrument and listing referential system
+						ul
+							li
+								Architecture, development, support and maintenance of a performant in-house referential database (multi-feed data aggregation, custom storage backend and efficient querying engine)
+							li
+								Key component in the integration of Deutsche Bank Prime Finance and Electronic Equities into BNP Paribas infrastructure
+							li
+								Collaboration with world-wide teams (UK, Hong-Kong, New-York and Russia-based colleagues from BNP and DB)
+					li
+						Real-time intraday data service development
+						ul
+							li
+								Low-latency solution for real-time fair value and proprietary basket valuation
+							li
+								Full historization of years of full-tick intraday data, over thousands of instruments
+							li
+								Fault resistant with data replication, failover and automatic data repairing
+							li
+								Streaming of historical and real-time data
+							li
+								Bespoke querying based on a custom DSL allowing clients to upload bare-metal code near the data source for efficiency
+					li
+						Historical intraday data service development
+						ul
+							li
+								Full historization of years-worth of trades, quotes and order books over millions of instruments
+							li
+								Low-latency with custom storage system
+					li
+						Maintenance and evolution of legacy systems
+						ul
+							li
+								Upgrade to latest technology stack with a focus on performance, simplicity, maintainability and extensive testing to achieve zero functional regression
+					li
+						Technical team manager
+						ul
+							li
+								Supervise a team of 2 to 3 developers
+							li
+								Functional and technical training
+					li
+						Technical advisor for the Rust language
+						ul
+							li
+								6 years of professional development in Rust
+							li
+								Technical review of the team’s Rust code base
+	section .sections
+		h3
+			@Skills
+		div .bullets
+			ul
+				li
+					Technical skills
+						ul
+							li
+								Excellent knowledge of computer architecture
+							li
+								Proficient in Linux system programming
+							li
+								Advanced use of benchmark and profiling tools for software optimisation
+							li
+								Extensive knowledge of Rust and Golang for building modern, efficient and robust backend systems
+							li
+								Advanced knowledge of imperative programming languages (C, C++ and Python)
+							li
+								Experience with modern web development
+				li
+					Soft skills
+						ul
+							li
+								Team player
+							li
+								Highly pragmatic
+							li
+								Efficient under pressure
+				li
+					@Languages
+						ul
+							li
+								French (native)
+							li
+								English (fluent)
+				li
+					@Finance
+						ul
+							li
+								Experience with multiple providers’ product, including Bloomberg Data Licence, Refinitiv Elektron Data Platform and Refinitiv Datascope
+							li
+								Good general understanding of sell-side activities through interaction various inner clients
+	section .sections
+		h3
+			@Education
+		div .item
+			div .title
+				MSc. in Advanced Computer Science
+			div .date
+				2011 - 2012
+			div .subtitle
+				The University of Manchester, School of Computer Science, Manchester, United Kingdom
+			div .bullets
+				ul
+					li
+						Majored in security and machine learning with distinction
+					li
+						Thesis on automatic classification of music
+		div .item
+			div .title
+				School of Engineering
+			div .date
+				2009 - 2012
+			div .subtitle
+          		École nationale supérieure d'informatique pour l'industrie et l'entreprise, Evry, France
+			div .bullets
+				ul
+					li
+						Engineer degree specialised in computer science
+	section .sections
+		h3
+			@Hobbies
+		div .item
+			div .bullets
+				ul
+					li
+						Museum, exhibitions and drawing hobbyist
+					li
+						Skiing, fitness training and cycling
+					li
+						Technology watch

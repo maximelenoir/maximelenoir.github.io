@@ -1,0 +1,65 @@
+body {
+    margin: 0px;
+    padding: 0px; 
+    background-color: rgb(37, 37, 37);
+}
+
+header {
+    padding: 20px;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    background-color: #2d5a94;
+}
+header img {
+    border-radius: 50%;
+    width: 8em;
+}
+header .title {
+    padding-left: 20px;
+}
+header .title .name {
+    font-weight: bolder;
+    margin: 0px;
+}
+header .title .subtitle {
+    margin: 0px;
+}
+header a.linkedin {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+	color: inherit;
+}
+
+.sections {
+    display: block;
+    color: white;
+    max-width: 600px;
+    margin: auto;
+    padding: 1em;
+    flex: 50% 0 50%;
+}
+.sections h3 {
+    font-size: 18pt;
+    font-weight: bolder;
+    text-transform: uppercase;
+    text-align: center;
+} 
+.sections div.item {
+	margin-bottom: 20px;
+}
+.sections div.title {
+	font-weight: bold;
+}
+.sections div.subtitle {
+	color: #757070;
+	font-size: 9pt;
+}
+.sections div.date {
+	color: #aeabab;
+	font-size: 9pt;
+}
