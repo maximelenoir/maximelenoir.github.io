@@ -31,12 +31,12 @@ header .title .subtitle {
 header a.linkedin {
     position: absolute;
     top: 5px;
-    right: 5px;
+    right: 40px;
 	color: inherit;
 }
 header a.github {
 	position: absolute;
-	top: 40px;
+	top: 5px;
 	right: 5px;
 	color: inherit;
 }
