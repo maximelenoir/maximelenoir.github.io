@@ -34,6 +34,12 @@ header a.linkedin {
     right: 5px;
 	color: inherit;
 }
+header a.github {
+	position: absolute;
+	top: 40px;
+	right: 5px;
+	color: inherit;
+}
 
 .sections {
     display: block;
