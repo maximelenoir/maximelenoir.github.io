@@ -57,6 +57,11 @@ header a.github {
 } 
 .sections div.item {
 	margin-bottom: 20px;
+	padding: 15px;
+}
+.sections div.item:target {
+	background-color: rgb(45, 45, 45);
+	border-radius: 5px;
 }
 .sections div.title {
 	font-weight: bold;
